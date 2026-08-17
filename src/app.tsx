@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
-import AddInjection from './pages/AddInjection/AddInjection';
 import { AuthProvider } from './context/AuthContext';
 import { GoalsProvider } from './context/GoalsContext';
 import { AppLayout } from './components/Layout/AppLayout';
+import { AddInjection } from './pages/AddInjection/AddInjection';
 
 const router = createBrowserRouter([
   {
@@ -11,7 +11,13 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <AddInjection />
+        element: (
+          <AddInjection
+            onSubmit={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+          />
+        )
       }
     ]
   }
