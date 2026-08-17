@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix add workout" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="84" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Fboury&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:Fboury/foufi-trainer.git&quot;,
+    &quot;accountId&quot;: &quot;23a4d6b3-1e92-42d3-ae31-786e87bc820a&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3C8JWtVUDaIEKNMZo9vqDskaPQH" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/boubou/Projets/docto-foufi",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "node",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/boubou/Projets/foufi-run/foufi-trainer/node_modules/prettier",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/boubou/Projets/docto-foufi/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="Push.Settings">
+    <force-push-targets>
+      <force-push-target remote-path="origin" branch="develop" />
+    </force-push-targets>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/pages/CreatePlan" />
+      <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/src/components" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/pages/CreatePlan" />
+      <recent name="$PROJECT_DIR$/src/pages/WorkoutDetails" />
+      <recent name="$PROJECT_DIR$/src/pages/Dashboard" />
+      <recent name="$PROJECT_DIR$/src/pages/AddWorkout" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="npm dev" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="" />
+      <created>1775761304817</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1775761304817</updated>
+      <workItem from="1775761306176" duration="16105000" />
+      <workItem from="1775923413960" duration="2293000" />
+      <workItem from="1775925775688" duration="6582000" />
+      <workItem from="1776014836645" duration="69000" />
+      <workItem from="1776014920641" duration="113000" />
+      <workItem from="1776015042242" duration="1237000" />
+      <workItem from="1776016388454" duration="24916000" />
+      <workItem from="1776253187485" duration="23352000" />
+      <workItem from="1777662658922" duration="4766000" />
+      <workItem from="1777906483307" duration="4264000" />
+      <workItem from="1778434926836" duration="2552000" />
+      <workItem from="1778772275731" duration="20486000" />
+      <workItem from="1780667309699" duration="2744000" />
+      <workItem from="1786990345604" duration="369000" />
+      <workItem from="1786990785506" duration="4773000" />
+    </task>
+    <task id="LOCAL-00005" summary="fix padding">
+      <option name="closed" value="true" />
+      <created>1775851696965</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1775851696965</updated>
+    </task>
+    <task id="LOCAL-00006" summary="import file">
+      <option name="closed" value="true" />
+      <created>1775917818184</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1775917818184</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Ajout de plein de trucs cools">
+      <option name="closed" value="true" />
+      <created>1775925912003</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1775925912003</updated>
+    </task>
+    <task id="LOCAL-00008" summary="ajout icone">
+      <option name="closed" value="true" />
+      <created>1775932505183</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1775932505183</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix icon">
+      <option name="closed" value="true" />
+      <created>1775932769665</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1775932769665</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add login">
+      <option name="closed" value="true" />
+      <created>1775934243415</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1775934243415</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add weekly">
+      <option name="closed" value="true" />
+      <created>1776012914173</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1776012914173</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix build">
+      <option name="closed" value="true" />
+      <created>1776014772886</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1776014772886</updated>
+    </task>
+    <task id="LOCAL-00013" summary="config fixed">
+      <option name="closed" value="true" />
+      <created>1776017938936</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1776017938936</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Ajout des records">
+      <option name="closed" value="true" />
+      <created>1776020085438</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1776020085438</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Ajout de la vue dynamique">
+      <option name="closed" value="true" />
+      <created>1776021637612</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1776021637612</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Ajout du profil">
+      <option name="closed" value="true" />
+      <created>1776022532067</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1776022532067</updated>
+    </task>
+    <task id="LOCAL-00017" summary="maj legende">
+      <option name="closed" value="true" />
+      <created>1776022898253</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1776022898253</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix records">
+      <option name="closed" value="true" />
+      <created>1776061234686</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1776061234686</updated>
+    </task>
+    <task id="LOCAL-00019" summary="update sets &amp; reps">
+      <option name="closed" value="true" />
+      <created>1776061764916</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1776061764916</updated>
+    </task>
+    <task id="LOCAL-00020" summary="supprimer un exo">
+      <option name="closed" value="true" />
+      <created>1776062122937</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1776062122937</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Ajout possibilité running">
+      <option name="closed" value="true" />
+      <created>1776099627249</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1776099627249</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Ajout bouillaaa">
+      <option name="closed" value="true" />
+      <created>1776104405598</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1776104405598</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Ajout bouillaaa distance running">
+      <option name="closed" value="true" />
+      <created>1776104625616</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1776104625616</updated>
+    </task>
+    <task id="LOCAL-00024" summary="fix">
+      <option name="closed" value="true" />
+      <created>1776104827966</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1776104827966</updated>
+    </task>
+    <task id="LOCAL-00025" summary="only stats from past">
+      <option name="closed" value="true" />
+      <created>1776105669429</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1776105669429</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Ajout liste goals">
+      <option name="closed" value="true" />
+      <created>1776109298447</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1776109298447</updated>
+    </task>
+    <task id="LOCAL-00027" summary="fix weekly">
+      <option name="closed" value="true" />
+      <created>1776188435673</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1776188435673</updated>
+    </task>
+    <task id="LOCAL-00028" summary="refacto contxtt">
+      <option name="closed" value="true" />
+      <created>1776275031417</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1776275031417</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Add completed">
+      <option name="closed" value="true" />
+      <created>1776279447749</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1776279447749</updated>
+    </task>
+    <task id="LOCAL-00030" summary="goal detail">
+      <option name="closed" value="true" />
+      <created>1776281187011</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1776281187011</updated>
+    </task>
+    <task id="LOCAL-00031" summary="découpage workout details">
+      <option name="closed" value="true" />
+      <created>1776368064782</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1776368064782</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Ajout de la modification de running">
+      <option name="closed" value="true" />
+      <created>1776684955821</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1776684955821</updated>
+    </task>
+    <task id="LOCAL-00033" summary="fix units">
+      <option name="closed" value="true" />
+      <created>1776685443544</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1776685443545</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Ajout gestion iscompleted et raceday">
+      <option name="closed" value="true" />
+      <created>1777191900507</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1777191900507</updated>
+    </task>
+    <task id="LOCAL-00035" summary="update ftp">
+      <option name="closed" value="true" />
+      <created>1777267290498</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1777267290498</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fix double tap ?">
+      <option name="closed" value="true" />
+      <created>1777270244968</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1777270244968</updated>
+    </task>
+    <task id="LOCAL-00037" summary="AJout modale workout">
+      <option name="closed" value="true" />
+      <created>1777663986204</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1777663986206</updated>
+    </task>
+    <task id="LOCAL-00038" summary="tri defi">
+      <option name="closed" value="true" />
+      <created>1777665387366</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1777665387366</updated>
+    </task>
+    <task id="LOCAL-00039" summary="fix success">
+      <option name="closed" value="true" />
+      <created>1777834299064</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1777834299064</updated>
+    </task>
+    <task id="LOCAL-00040" summary="fix build">
+      <option name="closed" value="true" />
+      <created>1777834555603</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1777834555603</updated>
+    </task>
+    <task id="LOCAL-00041" summary="add volume">
+      <option name="closed" value="true" />
+      <created>1777919798529</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1777919798529</updated>
+    </task>
+    <task id="LOCAL-00042" summary="upgrade records">
+      <option name="closed" value="true" />
+      <created>1777921343560</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1777921343560</updated>
+    </task>
+    <task id="LOCAL-00043" summary="try to fix">
+      <option name="closed" value="true" />
+      <created>1777921435611</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1777921435611</updated>
+    </task>
+    <task id="LOCAL-00044" summary="wip: creation plan velo">
+      <option name="closed" value="true" />
+      <created>1778777813078</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1778777813078</updated>
+    </task>
+    <task id="LOCAL-00045" summary="wip plan relativement propre">
+      <option name="closed" value="true" />
+      <created>1778784437813</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1778784437813</updated>
+    </task>
+    <task id="LOCAL-00046" summary="ajustem">
+      <option name="closed" value="true" />
+      <created>1778785261461</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1778785261461</updated>
+    </task>
+    <task id="LOCAL-00047" summary="ajustements">
+      <option name="closed" value="true" />
+      <created>1778786971068</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1778786971068</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Ajout consultation programme">
+      <option name="closed" value="true" />
+      <created>1778875510784</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1778875510784</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fix routing">
+      <option name="closed" value="true" />
+      <created>1778875665048</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1778875665048</updated>
+    </task>
+    <task id="LOCAL-00050" summary="fix enregistrement">
+      <option name="closed" value="true" />
+      <created>1778875821842</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1778875821846</updated>
+    </task>
+    <task id="LOCAL-00051" summary="fix routing">
+      <option name="closed" value="true" />
+      <created>1779046160712</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1779046160712</updated>
+    </task>
+    <task id="LOCAL-00052" summary="add seance type">
+      <option name="closed" value="true" />
+      <created>1780668152981</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1780668152982</updated>
+    </task>
+    <task id="LOCAL-00053" summary="fix add workout">
+      <option name="closed" value="true" />
+      <created>1780668858671</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1780668858671</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/tailwind.config.js" />
+      </list>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="goal detail" />
+    <MESSAGE value="découpage workout details" />
+    <MESSAGE value="Ajout de la modification de running" />
+    <MESSAGE value="fix units" />
+    <MESSAGE value="Ajout gestion iscompleted et raceday" />
+    <MESSAGE value="update ftp" />
+    <MESSAGE value="fix double tap ?" />
+    <MESSAGE value="AJout modale workout" />
+    <MESSAGE value="tri defi" />
+    <MESSAGE value="fix success" />
+    <MESSAGE value="fix build" />
+    <MESSAGE value="add volume" />
+    <MESSAGE value="upgrade records" />
+    <MESSAGE value="try to fix" />
+    <MESSAGE value="wip : création plan" />
+    <MESSAGE value="wip: creation plan velo" />
+    <MESSAGE value="wip plan relativement propre" />
+    <MESSAGE value="ajustem" />
+    <MESSAGE value="ajustements" />
+    <MESSAGE value="ajout de plusieurs jours autre que 3" />
+    <MESSAGE value="Ajout consultation programme" />
+    <MESSAGE value="fix enregistrement" />
+    <MESSAGE value="fix routing" />
+    <MESSAGE value="add seance type" />
+    <MESSAGE value="fix add workout" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix add workout" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

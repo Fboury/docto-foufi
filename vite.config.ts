@@ -1,0 +1,15 @@
+import { defineConfig } from 'vite';
+import preact from '@preact/preset-vite';
+import path from 'path';
+
+export default defineConfig({
+  plugins: [preact()],
+  resolve: {
+    alias: {
+      react: path.resolve(__dirname, 'node_modules/preact/compat'),
+      'react-dom': path.resolve(__dirname, 'node_modules/preact/compat'),
+      'react-dom/test-utils': path.resolve(__dirname, 'node_modules/preact/test-utils'),
+      'react/jsx-runtime': path.resolve(__dirname, 'node_modules/preact/jsx-runtime')
+    }
+  }
+});

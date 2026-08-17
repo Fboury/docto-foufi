@@ -1,0 +1,52 @@
+{
+  "name": "docto-foufi",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.0",
+    "canvas-confetti": "^1.9.4",
+    "clsx": "~2.1.0",
+    "lucide-react": "^1.16.0",
+    "preact": "^10.29.8",
+    "react": "~19.2.0",
+    "react-dom": "~19.2.0",
+    "react-router": "~7.11.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "~9.39.0",
+    "@preact/preset-vite": "^2.10.5",
+    "@tailwindcss/postcss": "~4.1.15",
+    "@testing-library/dom": "~10.4.0",
+    "@testing-library/jest-dom": "~6.9.0",
+    "@testing-library/react": "~16.3.0",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "~24.10.0",
+    "@types/react": "~19.2.5",
+    "@types/react-dom": "~19.2.0",
+    "@vitejs/plugin-react-swc": "~4.2.0",
+    "@vitest/ui": "~4.0.15",
+    "date-fns": "~4.1.0",
+    "eslint": "~9.39.0",
+    "eslint-plugin-prettier": "~5.5.0",
+    "eslint-plugin-react-hooks": "~7.0.0",
+    "eslint-plugin-react-refresh": "~0.4.25",
+    "globals": "~17.0.0",
+    "jsdom": "~27.4.0",
+    "postcss": "~8.5.5",
+    "prettier": "~3.7.0",
+    "prettier-plugin-tailwindcss": "~0.7.0",
+    "sass": "~1.93.0",
+    "tailwindcss": "~4.1.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "~8.52.0",
+    "vite": "~7.3.0",
+    "vite-plugin-svgr": "~4.5.0",
+    "vitest": "~4.0.15"
+  }
+}
