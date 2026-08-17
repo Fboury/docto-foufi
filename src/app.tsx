@@ -1,6 +1,4 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
-import { AuthProvider } from './context/AuthContext';
-import { GoalsProvider } from './context/GoalsContext';
 import { AppLayout } from './components/Layout/AppLayout';
 import { AddInjection } from './pages/AddInjection/AddInjection';
 
@@ -24,11 +22,5 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <GoalsProvider>
-        <RouterProvider router={router} />
-      </GoalsProvider>
-    </AuthProvider>
-  );
+  return <RouterProvider router={router} />;
 }
