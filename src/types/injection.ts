@@ -30,27 +30,76 @@ export interface InjectionEntry {
 }
 
 export const ZONES_CONFIG: ZoneData[] = [
-  { id: 'bras_droit', shortLabel: 'Bras Droit', fullLabel: 'Bras Droit', isRecent: false, daysAgo: 8, emoji: '💪' },
+  {
+    id: 'bras_droit',
+    shortLabel: 'Bras Droit',
+    fullLabel: 'Bras Droit',
+    isRecent: false,
+    daysAgo: null,
+    emoji: '💪'
+  },
   {
     id: 'ventre_hd',
     shortLabel: 'Ventre HD',
     fullLabel: 'Ventre Haut Droit',
     isRecent: false,
-    daysAgo: 6,
+    daysAgo: null,
     emoji: '↗️'
   },
   {
     id: 'ventre_hg',
     shortLabel: 'Ventre HG',
     fullLabel: 'Ventre Haut Gauche',
-    isRecent: true,
-    daysAgo: 1,
+    isRecent: false,
+    daysAgo: null,
     emoji: '↖️'
   },
-  { id: 'ventre_bd', shortLabel: 'Ventre BD', fullLabel: 'Ventre Bas Droit', isRecent: true, daysAgo: 2, emoji: '↘️' },
-  { id: 'ventre_bg', shortLabel: 'Ventre BG', fullLabel: 'Ventre Bas Gauche', isRecent: true, daysAgo: 3, emoji: '↙️' },
-  { id: 'cuisse_gauche', shortLabel: 'Cuisse G', fullLabel: 'Cuisse Gauche', isRecent: true, daysAgo: 4, emoji: '🦵' },
-  { id: 'cuisse_droite', shortLabel: 'Cuisse D', fullLabel: 'Cuisse Droite', isRecent: true, daysAgo: 5, emoji: '🦵' },
-  { id: 'flanc_gauche', shortLabel: 'Flanc G', fullLabel: 'Flanc Gauche', isRecent: false, daysAgo: 10, emoji: '🍮' },
-  { id: 'flanc_droit', shortLabel: 'Flanc D', fullLabel: 'Flanc Droit', isRecent: false, daysAgo: 7, emoji: '🍮' }
+  {
+    id: 'ventre_bd',
+    shortLabel: 'Ventre BD',
+    fullLabel: 'Ventre Bas Droit',
+    isRecent: false,
+    daysAgo: null,
+    emoji: '↘️'
+  },
+  {
+    id: 'ventre_bg',
+    shortLabel: 'Ventre BG',
+    fullLabel: 'Ventre Bas Gauche',
+    isRecent: false,
+    daysAgo: null,
+    emoji: '↙️'
+  },
+  {
+    id: 'cuisse_gauche',
+    shortLabel: 'Cuisse G',
+    fullLabel: 'Cuisse Gauche',
+    isRecent: false,
+    daysAgo: null,
+    emoji: '🦵'
+  },
+  {
+    id: 'cuisse_droite',
+    shortLabel: 'Cuisse D',
+    fullLabel: 'Cuisse Droite',
+    isRecent: false,
+    daysAgo: null,
+    emoji: '🦵'
+  },
+  {
+    id: 'flanc_gauche',
+    shortLabel: 'Flanc G',
+    fullLabel: 'Flanc Gauche',
+    isRecent: false,
+    daysAgo: null,
+    emoji: '🍮'
+  },
+  {
+    id: 'flanc_droit',
+    shortLabel: 'Flanc D',
+    fullLabel: 'Flanc Droit',
+    isRecent: false,
+    daysAgo: null,
+    emoji: '🍮'
+  }
 ];

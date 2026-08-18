@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import { AppLayout } from './components/Layout/AppLayout';
 import { AddInjection } from './pages/AddInjection/AddInjection';
+import { Dashboard } from './pages/Dashboard/Dashboard';
+import { History } from './pages/History/History';
 
 const router = createBrowserRouter([
   {
@@ -8,12 +10,19 @@ const router = createBrowserRouter([
     element: <AppLayout />, // Ton menu et ton fond sombre
     children: [
       {
-        path: '',
+        index: true,
+        element: <Dashboard />
+      },
+      {
+        path: '/ajout-injection',
         element: (
-          <AddInjection
-            onSubmit={function (): void {
-              throw new Error('Function not implemented.');
-            }}
+          <AddInjection />
+        )
+      },
+      {
+        path: '/history',
+        element: (
+          <History
           />
         )
       }
