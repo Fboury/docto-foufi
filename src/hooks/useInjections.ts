@@ -1,11 +1,11 @@
 import {useEffect, useState} from 'react';
 import {supabase} from '../supabaseClient';
 import {
-  InjectionEntry,
-  InjectionZone,
-  ReactionType,
-  ZoneData,
-  ZONES_CONFIG
+    InjectionEntry,
+    InjectionZone,
+    ReactionType,
+    ZoneData,
+    ZONES_CONFIG
 } from '../types/injection';
 
 export const useInjections = () => {
@@ -103,7 +103,7 @@ export const useInjections = () => {
         return {
             ...zone,
             daysAgo: diffDays,
-            isRecent: diffDays <= 3
+            isRecent: diffDays <= 6
         };
     });
 

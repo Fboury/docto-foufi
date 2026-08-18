@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="Ajout et historique">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="gitigbore">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useInjections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useInjections.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/injection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/injection.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,23 +149,7 @@
       <workItem from="1780667309699" duration="2744000" />
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
-      <workItem from="1787078996709" duration="2075000" />
-    </task>
-    <task id="LOCAL-00008" summary="ajout icone">
-      <option name="closed" value="true" />
-      <created>1775932505183</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1775932505183</updated>
-    </task>
-    <task id="LOCAL-00009" summary="fix icon">
-      <option name="closed" value="true" />
-      <created>1775932769665</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1775932769665</updated>
+      <workItem from="1787078996709" duration="2874000" />
     </task>
     <task id="LOCAL-00010" summary="Add login">
       <option name="closed" value="true" />
@@ -541,7 +527,23 @@
       <option name="project" value="LOCAL" />
       <updated>1787081061572</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="gitigbore">
+      <option name="closed" value="true" />
+      <created>1787081094519</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1787081094519</updated>
+    </task>
+    <task id="LOCAL-00058" summary="gitigbore">
+      <option name="closed" value="true" />
+      <created>1787081101516</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1787081101516</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -553,7 +555,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix units" />
     <MESSAGE value="Ajout gestion iscompleted et raceday" />
     <MESSAGE value="update ftp" />
     <MESSAGE value="fix double tap ?" />
@@ -578,7 +579,8 @@
     <MESSAGE value="add envlocal" />
     <MESSAGE value="test" />
     <MESSAGE value="Ajout et historique" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout et historique" />
+    <MESSAGE value="gitigbore" />
+    <option name="LAST_COMMIT_MESSAGE" value="gitigbore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

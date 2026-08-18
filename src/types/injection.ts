@@ -31,12 +31,12 @@ export interface InjectionEntry {
 
 export const ZONES_CONFIG: ZoneData[] = [
   {
-    id: 'bras_droit',
-    shortLabel: 'Bras Droit',
-    fullLabel: 'Bras Droit',
+    id: 'ventre_hg',
+    shortLabel: 'Ventre HG',
+    fullLabel: 'Ventre Haut Gauche',
     isRecent: false,
     daysAgo: null,
-    emoji: '💪'
+    emoji: '↖️'
   },
   {
     id: 'ventre_hd',
@@ -47,20 +47,12 @@ export const ZONES_CONFIG: ZoneData[] = [
     emoji: '↗️'
   },
   {
-    id: 'ventre_hg',
-    shortLabel: 'Ventre HG',
-    fullLabel: 'Ventre Haut Gauche',
+    id: 'bras_droit',
+    shortLabel: 'Bras Droit',
+    fullLabel: 'Bras Droit',
     isRecent: false,
     daysAgo: null,
-    emoji: '↖️'
-  },
-  {
-    id: 'ventre_bd',
-    shortLabel: 'Ventre BD',
-    fullLabel: 'Ventre Bas Droit',
-    isRecent: false,
-    daysAgo: null,
-    emoji: '↘️'
+    emoji: '💪'
   },
   {
     id: 'ventre_bg',
@@ -69,6 +61,14 @@ export const ZONES_CONFIG: ZoneData[] = [
     isRecent: false,
     daysAgo: null,
     emoji: '↙️'
+  },
+  {
+    id: 'ventre_bd',
+    shortLabel: 'Ventre BD',
+    fullLabel: 'Ventre Bas Droit',
+    isRecent: false,
+    daysAgo: null,
+    emoji: '↘️'
   },
   {
     id: 'cuisse_gauche',
