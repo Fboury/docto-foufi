@@ -1,10 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
+// Utilisation d'un cast 'any' pour éviter le blocage du compilateur TS
+const env = (import.meta as any).env;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Les variables VITE_SUPABASE_URL ou VITE_SUPABASE_ANON_KEY manquent dans l\'environnement.');
-}
+const supabaseUrl = env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = env.VITE_SUPABASE_ANON_KEY || '';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
