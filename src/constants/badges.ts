@@ -97,6 +97,13 @@ const eventBadges: BadgeConfig[] = [
     description: 'Faire une injection le 1er août (2026)',
     emoji: '💍',
     repeatable: true
+  },
+  {
+    key: 'test',
+    title: 'On teste les supers badges !',
+    description: 'Parce que je sais que tu aimes bien ça !',
+    emoji: '😘',
+    repeatable: false
   }
 ];
 

@@ -53,6 +53,7 @@ const getUnlockedKeys = (items: any[]) => {
     if (m === 12 && day === 1) keys.push('couple_anniversary_injection');
     if (m === 4 && day === 1) keys.push('pacs_anniversary_injection');
     if (m === 8 && day === 1) keys.push('engagement_anniversary_injection');
+    if (m === 8 && day === 19) keys.push('test');
   });
 
   return keys;

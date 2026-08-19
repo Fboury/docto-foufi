@@ -66,6 +66,7 @@ export const Profile: React.FC = () => {
     const coupleAnniversaryYears = new Set<number>();
     const pacsAnniversaryYears = new Set<number>();
     const engagementAnniversaryYears = new Set<number>();
+    const test = new Set<number>();
 
     items.forEach(i => {
       if (!i.injected_at) return;
@@ -82,6 +83,7 @@ export const Profile: React.FC = () => {
       if (month === 12 && day === 1) coupleAnniversaryYears.add(year);
       if (month === 4 && day === 1) pacsAnniversaryYears.add(year);
       if (month === 8 && day === 1) engagementAnniversaryYears.add(year);
+      if (month === 8 && day === 19) test.add(year);
     });
 
     if (christmasYears.size > 0) counts['christmas_injection'] = christmasYears.size;
@@ -93,6 +95,7 @@ export const Profile: React.FC = () => {
     if (pacsAnniversaryYears.size > 0) counts['pacs_anniversary_injection'] = pacsAnniversaryYears.size;
     if (engagementAnniversaryYears.size > 0)
       counts['engagement_anniversary_injection'] = engagementAnniversaryYears.size;
+    if (test.size > 0) counts['test'] = test.size;
 
     return counts;
   };
