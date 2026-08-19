@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="gitigbore">
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="some fixes">
+      <change afterPath="$PROJECT_DIR$/src/pages/Stats/Stats.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useInjections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useInjections.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/injection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/injection.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,15 +150,7 @@
       <workItem from="1780667309699" duration="2744000" />
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
-      <workItem from="1787078996709" duration="2874000" />
-    </task>
-    <task id="LOCAL-00010" summary="Add login">
-      <option name="closed" value="true" />
-      <created>1775934243415</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1775934243415</updated>
+      <workItem from="1787078996709" duration="3992000" />
     </task>
     <task id="LOCAL-00011" summary="Add weekly">
       <option name="closed" value="true" />
@@ -543,7 +536,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787081101516</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="some fixes">
+      <option name="closed" value="true" />
+      <created>1787082038160</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1787082038160</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajout gestion iscompleted et raceday" />
     <MESSAGE value="update ftp" />
     <MESSAGE value="fix double tap ?" />
     <MESSAGE value="AJout modale workout" />
@@ -580,7 +580,8 @@
     <MESSAGE value="test" />
     <MESSAGE value="Ajout et historique" />
     <MESSAGE value="gitigbore" />
-    <option name="LAST_COMMIT_MESSAGE" value="gitigbore" />
+    <MESSAGE value="some fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="some fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

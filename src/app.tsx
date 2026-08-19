@@ -3,6 +3,7 @@ import { AppLayout } from './components/Layout/AppLayout';
 import { AddInjection } from './pages/AddInjection/AddInjection';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { History } from './pages/History/History';
+import { Stats } from './pages/Stats/Stats';
 
 const router = createBrowserRouter([
   {
@@ -15,16 +16,15 @@ const router = createBrowserRouter([
       },
       {
         path: '/ajout-injection',
-        element: (
-          <AddInjection />
-        )
+        element: <AddInjection />
       },
       {
         path: '/history',
-        element: (
-          <History
-          />
-        )
+        element: <History />
+      },
+      {
+        path: '/stats',
+        element: <Stats />
       }
     ]
   }
