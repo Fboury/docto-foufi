@@ -98,7 +98,7 @@ export const Dashboard: React.FC = () => {
           {/* Aperçu de la dernière injection */}
           {lastInjection && (
             <div
-              className="flex items-center justify-between rounded-3xl border border-[#E8DFD8] bg-white p-4 shadow-sm">
+              className="flex items-center justify-between rounded-3xl border border-[#E8DFD8] bg-white p-2 shadow-sm">
               <div className="flex items-center gap-3">
                 <div
                   className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F5EFE6] text-[#5E4B8B]">
