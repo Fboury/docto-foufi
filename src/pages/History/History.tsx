@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { ArrowLeft, Calendar, Filter, Trash2 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
 import { ReactionType, ZONES_CONFIG } from '../../types/injection';
+import { formatDate, formatTime } from '../../utils/dateUtils';
 
 export const History: React.FC = () => {
   const navigate = useNavigate();
@@ -124,7 +125,6 @@ export const History: React.FC = () => {
           {filteredInjections.map(item => {
             const zoneInfo = ZONES_CONFIG.find(z => z.id === item.zone);
             const reaction = getReactionBadge(item.reaction_type);
-            const dateObj = new Date(item.injected_at);
 
             return (
               <div
@@ -140,16 +140,15 @@ export const History: React.FC = () => {
                     <div>
                       <h3
                         className="text-sm font-bold text-[#2D283E]">{zoneInfo?.fullLabel || item.zone}</h3>
-                      <p
-                        className="text-[11px] font-medium text-[#8E8294] capitalize">
-                        {dateObj.toLocaleDateString('fr-FR', {
-                          weekday: 'long',
-                          day: 'numeric',
-                          month: 'long',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </p>
+                      <div>
+                        {/* Affichage de la date brute Supabase */}
+                        <p
+                          className="font-semibold text-[#2D283E] capitalize">{formatDate(item.injected_at)}</p>
+
+                        {/* Affichage de l'heure brute Supabase */}
+                        <p
+                          className="text-xs text-[#8E8294]">{formatTime(item.injected_at)}</p>
+                      </div>
                     </div>
                   </div>
 
@@ -177,7 +176,7 @@ export const History: React.FC = () => {
 
                   {item.reaction_details && (
                     <span
-                      className="max-w-[200px] truncate text-[11px] text-[#8E8294] italic">
+                      className="max-w-[200px] truncate text-[11px] font-normal text-[#8E8294] italic">
                       « {item.reaction_details} »
                     </span>
                   )}

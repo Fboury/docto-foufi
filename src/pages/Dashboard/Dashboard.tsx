@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import { useInjections } from '../../hooks/useInjections';
 import { ZONES_CONFIG } from '../../types/injection';
+import { NextInjectionTile } from './components/NextInjectionTile';
 import {
   ChevronRight,
   Clock,
@@ -36,7 +37,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <button
-          onClick={() => navigate('/historique')}
+          onClick={() => navigate('/history')}
           className="rounded-2xl border border-[#E8DFD8] bg-white p-2.5 text-[#5E4B8B] transition-all hover:bg-[#F5EFE6]"
           title="Consulter l'historique">
           <History className="h-5 w-5" />
@@ -56,6 +57,8 @@ export const Dashboard: React.FC = () => {
         </div>
       ) : (
         <>
+          <NextInjectionTile lastInjection={lastInjection} />
+
           {/* CARTE D'ACTION PRINCIPALE */}
           <div
             onClick={() => navigate('/ajout-injection')}

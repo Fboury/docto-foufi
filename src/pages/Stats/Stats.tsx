@@ -2,61 +2,34 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import {
   Activity,
-  AlertTriangle,
   ArrowLeft,
+  Flame,
+  Hash,
   PieChart,
-  TrendingUp
+  ShieldAlert,
+  ShieldCheck
 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
-import { ReactionType, ZONES_CONFIG } from '../../types/injection';
+import { ZONES_CONFIG } from '../../types/injection';
 
 export const Stats: React.FC = () => {
   const navigate = useNavigate();
   const { injections, loading } = useInjections();
 
-  // 1. Calculs globaux
+  if (loading) {
+    return (
+      <div
+        className="mx-auto max-w-xl px-4 py-10 text-center text-xs font-medium text-[#8E8294]">
+        Chargement des statistiques...
+      </div>
+    );
+  }
+
   const totalInjections = injections.length;
-  const injectionsWithReaction = injections.filter(i => i.reaction_type && i.reaction_type !== 'aucune');
-  const reactionRate = totalInjections > 0 ? Math.round((injectionsWithReaction.length / totalInjections) * 100) : 0;
 
-  // 2. Décomptes par type de réaction
-  const reactionCounts: Record<ReactionType, number> = {
-    aucune: 0,
-    bleu: 0,
-    douleur: 0,
-    autre: 0
-  };
-
-  injections.forEach(item => {
-    if (item.reaction_type && reactionCounts[item.reaction_type] !== undefined) {
-      reactionCounts[item.reaction_type]++;
-    }
-  });
-
-  // 3. Décomptes et sensibilité par zone
-  const zoneStatsMap = ZONES_CONFIG.map(zone => {
-    const zoneInjections = injections.filter(i => i.zone === zone.id);
-    const count = zoneInjections.length;
-    const reactionsCount = zoneInjections.filter(i => i.reaction_type && i.reaction_type !== 'aucune').length;
-
-    const reactionPercentage = count > 0 ? Math.round((reactionsCount / count) * 100) : 0;
-
-    return {
-      ...zone,
-      count,
-      reactionsCount,
-      reactionPercentage
-    };
-  });
-
-  // Trier les zones les plus sollicitées
-  const sortedByCount = [...zoneStatsMap].sort((a, b) => b.count - a.count);
-  const mostUsedZone = sortedByCount[0]?.count > 0 ? sortedByCount[0] : null;
-
-  return (
-    <div className="mx-auto max-w-xl space-y-6 px-4 py-6 pb-12">
-      {/* En-tête & Navigation */}
-      <div className="space-y-2">
+  if (totalInjections === 0) {
+    return (
+      <div className="mx-auto max-w-xl space-y-6 px-4 py-6">
         <button
           type="button"
           onClick={() => navigate('/')}
@@ -64,189 +37,317 @@ export const Stats: React.FC = () => {
           <ArrowLeft className="h-4 w-4" />
           <span>Retour au tableau de bord</span>
         </button>
+        <div
+          className="rounded-3xl border border-[#E8DFD8] bg-white p-8 text-center text-xs font-medium text-[#8E8294]">
+          Aucune donnée disponible pour générer des statistiques.
+        </div>
+      </div>
+    );
+  }
 
-        <div>
-          <h1
-            className="font-serif text-2xl font-bold text-[#5E4B8B]">Statistiques</h1>
-          <p className="text-xs text-[#8E8294]">Analyse de la rotation et de la
-            tolérance des zones</p>
+  // --- 1. CALCUL DES RÉACTIONS ---
+  const reactionCounts = {
+    aucune: injections.filter(i => i.reaction_type === 'aucune' || !i.reaction_type).length,
+    bleu: injections.filter(i => i.reaction_type === 'bleu').length,
+    douleur: injections.filter(i => i.reaction_type === 'douleur').length,
+    autre: injections.filter(i => i.reaction_type === 'autre').length
+  };
+
+  const toleranceRate = Math.round((reactionCounts.aucune / totalInjections) * 100);
+
+  // Statistiques par zone
+  const zoneStatsMap = ZONES_CONFIG.map(zone => {
+    const zoneInjections = injections.filter(i => i.zone === zone.id);
+    const count = zoneInjections.length;
+    const reactionsCount = zoneInjections.filter(i => i.reaction_type && i.reaction_type !== 'aucune').length;
+    const reactionRate = count > 0 ? (reactionsCount / count) * 100 : 0;
+
+    return {
+      ...zone,
+      count,
+      reactionsCount,
+      reactionRate: Math.round(reactionRate)
+    };
+  });
+
+  const activeZoneStats = zoneStatsMap.filter(z => z.count > 0);
+
+  // --- TOP 1 SOLLICITATION (GESTION DES ÉGALITÉS) ---
+  const maxInjectionsCount = Math.max(...zoneStatsMap.map(z => z.count), 0);
+  const top1Zones = zoneStatsMap.filter(z => z.count === maxInjectionsCount && maxInjectionsCount > 0);
+
+  // Zone la plus tolérante
+  const mostTolerantZone = [...activeZoneStats].sort((a, b) => a.reactionRate - b.reactionRate || b.count - a.count)[0];
+
+  // Zone la plus sensible
+  const mostSensitiveZone = [...activeZoneStats].sort(
+    (a, b) => b.reactionRate - a.reactionRate || b.reactionsCount - a.reactionsCount
+  )[0];
+
+  const averageInjectionsPerZone = totalInjections / ZONES_CONFIG.length;
+
+  return (
+    <div className="mx-auto max-w-xl space-y-6 px-4 py-6">
+      {/* En-tête */}
+      <div className="space-y-1">
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-xs font-bold text-[#8E8294] transition-colors hover:text-[#5E4B8B]">
+          <ArrowLeft className="h-4 w-4" />
+          <span>Retour au tableau de bord</span>
+        </button>
+        <h1
+          className="font-serif text-2xl font-bold text-[#5E4B8B]">Statistiques</h1>
+      </div>
+
+      {/* SECTION 1 : VUE D'ENSEMBLE */}
+      <div className="space-y-3">
+        <div
+          className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
+          <Hash className="h-3.5 w-3.5" />
+          <span>Vue d'ensemble</span>
+        </div>
+
+        <div
+          className="flex items-center justify-between rounded-3xl border border-[#E8DFD8] bg-white p-5 shadow-xs">
+          <div className="space-y-0.5">
+            <span className="text-xs font-semibold text-[#8E8294]">Total des injections enregistrées</span>
+            <p className="text-3xl font-bold text-[#5E4B8B]">
+              {totalInjections}{' '}
+              <span
+                className="text-sm font-normal text-[#8E8294]">piqûre{totalInjections > 1 ? 's' : ''}</span>
+            </p>
+          </div>
+          <div
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F5EFE6] text-2xl">
+            💉
+          </div>
         </div>
       </div>
 
-      {loading ? (
-        <div
-          className="py-12 text-center text-xs font-medium text-[#8E8294]">Analyse
-          des données en cours...</div>
-      ) : totalInjections === 0 ? (
-        <div
-          className="space-y-2 rounded-3xl border border-[#E8DFD8] bg-white p-8 text-center">
-          <PieChart className="mx-auto h-8 w-8 text-[#8E8294] opacity-50" />
-          <p className="text-sm font-bold text-[#2D283E]">Aucune donnée à
-            analyser</p>
-          <p className="text-xs text-[#8E8294]">
-            Enregistrez vos premières injections pour visualiser les
-            statistiques de rotation.
-          </p>
-        </div>
-      ) : (
-        <>
-          {/* Cartes KPI synthétiques */}
-          <div className="grid grid-cols-2 gap-3">
-            <div
-              className="space-y-1 rounded-3xl border border-[#E8DFD8] bg-white p-4 shadow-sm">
-              <div className="flex items-center justify-between text-[#5E4B8B]">
-                <Activity className="h-5 w-5" />
-                <span
-                  className="rounded-full bg-[#F5EFE6] px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase">
-                  Total
-                </span>
-              </div>
-              <p
-                className="text-2xl font-bold text-[#2D283E]">{totalInjections}</p>
-              <p className="text-[11px] font-medium text-[#8E8294]">Injections
-                enregistrées</p>
+      {/* SECTION 2 : ZONES LES PLUS SOLLICITÉES */}
+      {top1Zones.length > 0 && (
+        <div className="space-y-3">
+          <div
+            className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
+            <Flame className="h-3.5 w-3.5" />
+            <span>{top1Zones.length > 1 ? 'Zones les plus sollicitées' : 'Zone la plus sollicitée'}</span>
+          </div>
+
+          <div
+            className="space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-5 shadow-xs">
+            <div className="flex items-center justify-between">
+              <span
+                className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                {maxInjectionsCount} piqûres {top1Zones.length > 1 ? 'chacune' : ''}
+              </span>
             </div>
 
-            <div
-              className="space-y-1 rounded-3xl border border-[#E8DFD8] bg-white p-4 shadow-sm">
-              <div className="flex items-center justify-between text-[#5E4B8B]">
-                <AlertTriangle className="h-5 w-5 text-amber-500" />
-                <span
-                  className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold tracking-wider text-amber-700 uppercase">
-                  Sensibilité
-                </span>
-              </div>
+            <div className="flex flex-wrap gap-2">
+              {top1Zones.map(z => (
+                <div
+                  key={z.id}
+                  className="flex items-center gap-2 rounded-2xl border border-[#E8DFD8] bg-[#F5EFE6] px-3 py-2">
+                  <span className="text-base">{z.emoji}</span>
+                  <div className="flex flex-col">
+                    <span
+                      className="text-xs font-bold text-[#2D283E]">{z.fullLabel}</span>
+                    <span className="text-[10px] text-[#8E8294]">
+                      {Math.round((maxInjectionsCount / totalInjections) * 100)}% du total
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SECTION 3 : ANALYSE DES RÉACTIONS */}
+      <div className="space-y-3">
+        <div
+          className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
+          <Activity className="h-3.5 w-3.5" />
+          <span>Analyse des réactions</span>
+        </div>
+
+        <div
+          className="space-y-4 rounded-3xl border border-[#E8DFD8] bg-white p-5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-semibold text-[#8E8294]">Taux d'injections sans réaction</span>
               <p
-                className="text-2xl font-bold text-[#2D283E]">{reactionRate}%</p>
-              <p className="text-[11px] font-medium text-[#8E8294]">Taux de
-                réactions observées</p>
+                className="text-3xl font-bold text-[#5E4B8B]">{toleranceRate}%</p>
+            </div>
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F5EFE6] text-2xl">✨
             </div>
           </div>
 
-          {/* Focus : Zone la plus utilisée */}
-          {mostUsedZone && (
+          {/* Barre de répartition globale */}
+          <div className="space-y-1.5">
             <div
-              className="flex items-center justify-between rounded-3xl border border-[#D3C1E5] bg-[#E5D9F2] p-4.5 shadow-sm">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{mostUsedZone.emoji}</span>
-                <div>
-                  <p
-                    className="text-[10px] font-bold tracking-wider text-[#5E4B8B] uppercase">
-                    Zone la plus sollicitée
-                  </p>
-                  <p
-                    className="text-sm font-bold text-[#2D283E]">{mostUsedZone.fullLabel}</p>
-                  <p className="mt-0.5 text-xs font-medium text-[#5E4B8B]">
-                    Utilisée {mostUsedZone.count} fois
-                    ({Math.round((mostUsedZone.count / totalInjections) * 100)}%
-                    des
-                    piqûres)
-                  </p>
-                </div>
-              </div>
-              <TrendingUp className="h-5 w-5 text-[#5E4B8B] opacity-60" />
-            </div>
-          )}
-
-          {/* Répartition des types de réaction */}
-          <div
-            className="space-y-4 rounded-3xl border border-[#E8DFD8] bg-white p-5 shadow-sm">
-            <h3 className="text-sm font-bold text-[#2D283E]">Bilan des
-              réactions</h3>
-
-            {/* Barre de répartition empilée */}
-            <div
-              className="flex h-4 w-full overflow-hidden rounded-full bg-[#F5EFE6]">
+              className="flex h-3 w-full overflow-hidden rounded-full bg-gray-100">
               <div
                 style={{ width: `${(reactionCounts.aucune / totalInjections) * 100}%` }}
-                className="h-full bg-emerald-400 transition-all"
+                className="bg-emerald-400"
                 title="Aucune"
               />
               <div
                 style={{ width: `${(reactionCounts.bleu / totalInjections) * 100}%` }}
-                className="h-full bg-blue-400 transition-all"
+                className="bg-blue-400"
                 title="Bleu"
               />
               <div
                 style={{ width: `${(reactionCounts.douleur / totalInjections) * 100}%` }}
-                className="h-full bg-rose-400 transition-all"
+                className="bg-rose-400"
                 title="Douleur"
               />
               <div
                 style={{ width: `${(reactionCounts.autre / totalInjections) * 100}%` }}
-                className="h-full bg-amber-400 transition-all"
+                className="bg-amber-400"
                 title="Autre"
               />
             </div>
 
             {/* Légende */}
             <div
-              className="grid grid-cols-2 gap-2 pt-1 text-xs font-semibold text-[#2D283E]">
-              <div className="flex items-center gap-2">
+              className="flex flex-wrap gap-3 pt-1 text-[11px] text-[#2D283E]">
+              <span className="flex items-center gap-1 font-medium">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" /> ✨ Aucune ({reactionCounts.aucune})
+              </span>
+              <span className="flex items-center gap-1 font-medium">
                 <span
-                  className="h-3 w-3 shrink-0 rounded-full bg-emerald-400" />
-                <span>Aucune ({reactionCounts.aucune})</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 shrink-0 rounded-full bg-blue-400" />
-                <span>Bleu ({reactionCounts.bleu})</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 shrink-0 rounded-full bg-rose-400" />
-                <span>Douleur ({reactionCounts.douleur})</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 shrink-0 rounded-full bg-amber-400" />
-                <span>Autre ({reactionCounts.autre})</span>
-              </div>
+                  className="h-2 w-2 rounded-full bg-blue-400" /> 🫐 Bleu ({reactionCounts.bleu})
+              </span>
+              <span className="flex items-center gap-1 font-medium">
+                <span className="h-2 w-2 rounded-full bg-rose-400" /> 🩹 Douleur ({reactionCounts.douleur})
+              </span>
+              {reactionCounts.autre > 0 && (
+                <span className="flex items-center gap-1 font-medium">
+                  <span className="h-2 w-2 rounded-full bg-amber-400" /> 💬 Autre ({reactionCounts.autre})
+                </span>
+              )}
             </div>
           </div>
 
-          {/* Sensibilité détaillée par zone */}
+          {/* Zones : Tolérante vs Sensible */}
           <div
-            className="space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-5 shadow-sm">
-            <h3 className="text-sm font-bold text-[#2D283E]">Détail par
-              zone</h3>
+            className="grid grid-cols-2 gap-3 border-t border-[#F5EFE6] pt-4">
+            {mostTolerantZone && (
+              <div
+                className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-3">
+                <div
+                  className="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
+                  <ShieldCheck className="h-4 w-4" />
+                  <span>Zone idéale</span>
+                </div>
+                <p className="mt-1 text-sm font-bold text-[#2D283E]">
+                  {mostTolerantZone.emoji} {mostTolerantZone.fullLabel}
+                </p>
+                <p className="mt-0.5 text-[10px] text-emerald-700">
+                  {100 - mostTolerantZone.reactionRate}% sans réaction
+                </p>
+              </div>
+            )}
 
-            <div className="space-y-2.5">
-              {zoneStatsMap.map(zone => (
+            {mostSensitiveZone && (
+              <div
+                className="rounded-2xl border border-rose-100 bg-rose-50/50 p-3">
+                <div
+                  className="flex items-center gap-1.5 text-xs font-bold text-rose-800">
+                  <ShieldAlert className="h-4 w-4" />
+                  <span>Zone sensible</span>
+                </div>
+                <p className="mt-1 text-sm font-bold text-[#2D283E]">
+                  {mostSensitiveZone.emoji} {mostSensitiveZone.fullLabel}
+                </p>
+                <p className="mt-0.5 text-[10px] text-rose-700">
+                  {mostSensitiveZone.reactionRate}% de réactions
+                  ({mostSensitiveZone.reactionsCount})
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 4 : REPARTITION ET EQUILIBRE */}
+      <div className="space-y-3">
+        <div
+          className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
+          <PieChart className="h-3.5 w-3.5" />
+          <span>Répartition et équilibre des zones</span>
+        </div>
+
+        <div
+          className="space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-5 shadow-xs">
+          <p className="text-xs text-[#8E8294]">
+            Moyenne théorique :{' '}
+            <span
+              className="font-bold text-[#2D283E]">{Math.round(averageInjectionsPerZone)} injections</span> par
+            zone.
+          </p>
+
+          <div className="space-y-3 pt-2">
+            {zoneStatsMap.map(zone => {
+              const usagePercent = Math.round((zone.count / totalInjections) * 100);
+              const barWidth = Math.round((zone.count / maxInjectionsCount) * 100);
+
+              const isTop1 = zone.count === maxInjectionsCount && maxInjectionsCount > 0;
+              const isOverused = zone.count > averageInjectionsPerZone * 1.35;
+              const isUnderused = zone.count < averageInjectionsPerZone * 0.65;
+
+              return (
                 <div
                   key={zone.id}
-                  className="flex items-center justify-between rounded-2xl border border-[#E8DFD8]/60 bg-[#F5EFE6] p-3 text-xs">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-xl">{zone.emoji}</span>
-                    <div>
-                      <p
-                        className="font-bold text-[#2D283E]">{zone.shortLabel}</p>
-                      <p className="text-[11px] text-[#8E8294]">
-                        {zone.count === 0 ? 'Jamais utilisée' : `${zone.count} piqûre${zone.count > 1 ? 's' : ''}`}
-                      </p>
+                  className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#2D283E]">
+                      {zone.emoji} {zone.fullLabel}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {isTop1 && (
+                        <span
+                          className="py-0.2 rounded-md bg-amber-100 px-1.5 text-[10px] font-bold text-amber-800">
+                          Top 1
+                        </span>
+                      )}
+                      {!isTop1 && isOverused && (
+                        <span
+                          className="py-0.2 rounded-md bg-amber-50 px-1.5 text-[10px] font-medium text-amber-700">
+                          Sollicitée
+                        </span>
+                      )}
+                      {isUnderused && (
+                        <span
+                          className="py-0.2 rounded-md bg-blue-50 px-1.5 text-[10px] font-medium text-blue-700">
+                          À privilégier
+                        </span>
+                      )}
+                      <span className="font-semibold text-[#5E4B8B]">
+                        {zone.count} <span
+                        className="text-[10px] text-[#8E8294]">({usagePercent}%)</span>
+                      </span>
                     </div>
                   </div>
 
-                  {zone.count > 0 ? (
-                    <div className="text-right">
-                      <span
-                        className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                          zone.reactionsCount === 0
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : zone.reactionPercentage > 30
-                              ? 'bg-rose-100 text-rose-800'
-                              : 'bg-amber-100 text-amber-800'
-                        }`}>
-                        {zone.reactionsCount === 0 ? '100% Ok' : `${zone.reactionPercentage}% réac.`}
-                      </span>
-                    </div>
-                  ) : (
-                    <span
-                      className="text-[10px] font-medium text-[#8E8294] italic">Inutilisée</span>
-                  )}
+                  <div
+                    className="flex h-2 w-full overflow-hidden rounded-full bg-[#F5EFE6]">
+                    <div
+                      style={{ width: `${barWidth}%` }}
+                      className={`rounded-full transition-all duration-300 ${
+                        isTop1 ? 'bg-amber-500' : isOverused ? 'bg-amber-400' : 'bg-[#5E4B8B]'
+                      }`}
+                    />
+                  </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
