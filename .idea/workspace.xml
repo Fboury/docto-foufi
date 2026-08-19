@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="Ajout stats">
-      <change afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" afterDir="false" />
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="more improvements">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Layout/AppLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/AppLayout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/History/History.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/History/History.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Stats/Stats.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Stats/Stats.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/dateUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/dateUtils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.tmp/tsconfig.app.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.tmp/tsconfig.app.tsbuildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,15 +149,7 @@
       <workItem from="1780667309699" duration="2744000" />
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
-      <workItem from="1787078996709" duration="7115000" />
-    </task>
-    <task id="LOCAL-00012" summary="fix build">
-      <option name="closed" value="true" />
-      <created>1776014772886</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1776014772886</updated>
+      <workItem from="1787078996709" duration="7255000" />
     </task>
     <task id="LOCAL-00013" summary="config fixed">
       <option name="closed" value="true" />
@@ -547,7 +535,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787132150946</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="more improvements">
+      <option name="closed" value="true" />
+      <created>1787139399637</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1787139399637</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -559,7 +555,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix double tap ?" />
     <MESSAGE value="AJout modale workout" />
     <MESSAGE value="tri defi" />
     <MESSAGE value="fix success" />
@@ -584,7 +579,8 @@
     <MESSAGE value="gitigbore" />
     <MESSAGE value="some fixes" />
     <MESSAGE value="Ajout stats" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout stats" />
+    <MESSAGE value="more improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="more improvements" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

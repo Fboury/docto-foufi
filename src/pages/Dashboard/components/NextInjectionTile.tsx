@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle2, Clock } from 'lucide-react';
-import { Injection } from '../../../types/injection';
+import { InjectionEntry } from '../../../types/injection';
 
 interface NextInjectionTileProps {
-  lastInjection: Injection | null;
+  lastInjection: InjectionEntry | null;
 }
 
 export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInjection }) => {
