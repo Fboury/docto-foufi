@@ -46,7 +46,7 @@ export const AppLayout: React.FC = () => {
 
       {/* ZONE DE CONTENU */}
       <main
-        className="mx-auto w-full max-w-xl flex-1 overflow-y-auto p-4 pb-24 sm:p-6 md:pb-6">
+        className="mx-auto w-full max-w-xl flex-1 overflow-y-auto p-2 pb-24 sm:p-6 md:pb-6">
         <Outlet />
       </main>
 
