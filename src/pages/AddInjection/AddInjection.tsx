@@ -10,10 +10,58 @@ import {
 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
 import { InjectionZone, ReactionType } from '../../types/injection';
+import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
+import {
+  BadgeUnlockModal
+} from '../../components/BadgeUnlockModal/BadgeUnlockModal';
+
+// Helper de détection des clés de badges débloqués
+const getUnlockedKeys = (items: any[]) => {
+  const keys: string[] = [];
+  const total = items.length;
+
+  // 1. Jalons globaux
+  const GLOBAL_STEPS = [1, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
+  GLOBAL_STEPS.forEach(step => {
+    if (total >= step) keys.push(`total_injections_${step}`);
+  });
+
+  // 2. Jalons par zone
+  const zoneCounts: Record<string, number> = {};
+  items.forEach(i => {
+    if (i.zone) zoneCounts[i.zone] = (zoneCounts[i.zone] || 0) + 1;
+  });
+
+  [25, 50, 75, 100, 125, 150, 175, 200, 225, 250].forEach(step => {
+    if (Object.values(zoneCounts).some(c => c >= step)) {
+      keys.push(`zone_master_${step}`);
+    }
+  });
+
+  // 3. Événements et dates spéciales
+  items.forEach(i => {
+    if (!i.injected_at) return;
+    const d = new Date(i.injected_at);
+    const m = d.getUTCMonth() + 1;
+    const day = d.getUTCDate();
+
+    if (m === 12 && day === 25) keys.push('christmas_injection');
+    if (m === 1 && day === 1) keys.push('new_year_injection');
+    if (m === 10 && day === 31) keys.push('halloween_injection');
+    if (m === 11 && day === 21) keys.push('bahia_birthday_injection');
+    if (m === 7 && day === 4) keys.push('partner_birthday_injection');
+    if (m === 12 && day === 1) keys.push('couple_anniversary_injection');
+    if (m === 4 && day === 1) keys.push('pacs_anniversary_injection');
+    if (m === 8 && day === 1) keys.push('engagement_anniversary_injection');
+  });
+
+  return keys;
+};
 
 export const AddInjection: React.FC = () => {
   const navigate = useNavigate();
   const {
+    injections,
     recommendedZone,
     zonesWithStats,
     loading,
@@ -21,9 +69,12 @@ export const AddInjection: React.FC = () => {
   } = useInjections();
 
   const [selectedZone, setSelectedZone] = useState<InjectionZone>(recommendedZone);
-  const [reactionType, setReactionType] = useState<ReactionType>('aucune');
+  const [selectedReactions, setSelectedReactions] = useState<ReactionType[]>([]);
   const [reactionDetails, setReactionDetails] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Nouveaux badges débloqués lors du submit
+  const [newlyUnlocked, setNewlyUnlocked] = useState<BadgeConfig[]>([]);
 
   // Mettre à jour la sélection par défaut une fois les données chargées
   useEffect(() => {
@@ -38,19 +89,56 @@ export const AddInjection: React.FC = () => {
     return now.toISOString().slice(0, 16);
   });
 
+  // Toggle pour la sélection multiple de réactions
+  const toggleReaction = (type: ReactionType) => {
+    if (type === 'aucune') {
+      setSelectedReactions([]);
+      return;
+    }
+
+    setSelectedReactions(prev => {
+      if (prev.includes(type)) {
+        return prev.filter(r => r !== type);
+      } else {
+        return [...prev, type];
+      }
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
+      // Reconstitution précise de la date ISO locale en conservant l'heure exacte saisie
+      const localDate = new Date(injectionDate);
+      const formattedDateTime = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000).toISOString();
+
+      const beforeKeys = getUnlockedKeys(injections);
+
       await addInjectionWithPreviousReaction(
         selectedZone,
-        new Date(injectionDate).toISOString(),
-        reactionType,
+        formattedDateTime,
+        selectedReactions.length > 0 ? selectedReactions : ['aucune'],
         reactionDetails
       );
 
-      navigate('/');
+      const newEntry = {
+        injected_at: formattedDateTime,
+        zone: selectedZone,
+        reaction_types: selectedReactions.length > 0 ? selectedReactions : ['aucune']
+      };
+
+      const updatedInjections = [newEntry, ...injections];
+      const afterKeys = getUnlockedKeys(updatedInjections);
+      const newlyUnlockedKeys = afterKeys.filter(k => !beforeKeys.includes(k));
+
+      if (newlyUnlockedKeys.length > 0) {
+        const badgesToReward = ALL_BADGES.filter(b => newlyUnlockedKeys.includes(b.key));
+        setNewlyUnlocked(badgesToReward);
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       console.error('Erreur lors de l\'enregistrement :', err);
       alert('Erreur lors de l\'enregistrement dans la base de données.');
@@ -189,7 +277,7 @@ export const AddInjection: React.FC = () => {
           </div>
         </div>
 
-        {/* 4. Réaction */}
+        {/* 4. Réaction (Sélection Multiple) */}
         <div
           className="space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-4.5 shadow-sm">
           <div>
@@ -206,12 +294,16 @@ export const AddInjection: React.FC = () => {
               { id: 'douleur', label: 'Douleur', emoji: '🩹' },
               { id: 'autre', label: 'Autre', emoji: '💬' }
             ].map(item => {
-              const isActive = reactionType === item.id;
+              const isAucune = item.id === 'aucune';
+              const isActive = isAucune
+                ? selectedReactions.length === 0
+                : selectedReactions.includes(item.id as ReactionType);
+
               return (
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => setReactionType(item.id as ReactionType)}
+                  onClick={() => toggleReaction(item.id as ReactionType)}
                   className={`flex flex-col items-center gap-1 rounded-2xl border px-2 py-2.5 text-xs font-bold transition-all ${
                     isActive
                       ? 'border-[#5E4B8B] bg-[#5E4B8B] text-white shadow-sm'
@@ -224,7 +316,7 @@ export const AddInjection: React.FC = () => {
             })}
           </div>
 
-          {reactionType !== 'aucune' && (
+          {selectedReactions.length > 0 && (
             <div className="pt-2">
               <textarea
                 rows={2}
@@ -252,6 +344,15 @@ export const AddInjection: React.FC = () => {
           )}
         </button>
       </form>
+
+      {/* Modal de déblocage des badges avec confettis */}
+      <BadgeUnlockModal
+        unlockedBadges={newlyUnlocked}
+        onClose={() => {
+          setNewlyUnlocked([]);
+          navigate('/');
+        }}
+      />
     </div>
   );
 };

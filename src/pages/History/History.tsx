@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, Calendar, Filter, Trash2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Check, Filter, Trash2 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
 import { ReactionType, ZONES_CONFIG } from '../../types/injection';
 import { formatDate, formatTime } from '../../utils/dateUtils';
@@ -8,14 +8,45 @@ import { formatDate, formatTime } from '../../utils/dateUtils';
 export const History: React.FC = () => {
   const navigate = useNavigate();
   const { injections, deleteInjection, loading } = useInjections();
-  const [filterReaction, setFilterReaction] = useState<ReactionType | 'toutes'>('toutes');
 
+  // Tableau pour stocker les filtres sélectionnés en multi-sélection
+  const [selectedFilters, setSelectedFilters] = useState<ReactionType[]>([]);
+
+  // Helper pour extraire la liste des réactions d'un item (avec rétrocompatibilité)
+  const getItemReactions = (item: any): ReactionType[] => {
+    if (item.reaction_types && Array.isArray(item.reaction_types) && item.reaction_types.length > 0) {
+      return item.reaction_types;
+    }
+    if (item.reaction_type && item.reaction_type !== 'aucune') {
+      return [item.reaction_type as ReactionType];
+    }
+    return ['aucune'];
+  };
+
+  // Toggle d'un filtre de réaction
+  const toggleFilter = (type: ReactionType | 'toutes') => {
+    if (type === 'toutes') {
+      setSelectedFilters([]);
+      return;
+    }
+
+    setSelectedFilters(prev => {
+      if (prev.includes(type)) {
+        return prev.filter(t => t !== type);
+      } else {
+        return [...prev, type];
+      }
+    });
+  };
+
+  // Filtrage : affiche l'injection si au moins une de ses réactions match avec les filtres actifs
   const filteredInjections = injections.filter(item => {
-    if (filterReaction === 'toutes') return true;
-    return item.reaction_type === filterReaction;
+    if (selectedFilters.length === 0) return true;
+    const itemReactions = getItemReactions(item);
+    return selectedFilters.some(filter => itemReactions.includes(filter));
   });
 
-  const getReactionBadge = (type: ReactionType) => {
+  const getReactionBadgeConfig = (type: ReactionType) => {
     switch (type) {
       case 'bleu':
         return {
@@ -61,19 +92,18 @@ export const History: React.FC = () => {
             <h1
               className="font-serif text-2xl font-bold text-[#5E4B8B]">Historique</h1>
             <p className="text-xs text-[#8E8294]">
-              {injections.length} injection{injections.length > 1 ? 's' : ''} enregistrée
-              {injections.length > 1 ? 's' : ''}
+              {filteredInjections.length} sur {injections.length} injection{injections.length > 1 ? 's' : ''}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Filtres par Réaction */}
+      {/* Filtres par Réaction (Multi-sélection) */}
       <div className="space-y-2">
         <div
           className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
           <Filter className="h-3.5 w-3.5" />
-          <span>Filtrer par réaction</span>
+          <span>Filtrer par réaction(s)</span>
         </div>
 
         <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
@@ -84,19 +114,24 @@ export const History: React.FC = () => {
             { id: 'douleur', label: 'Douleur', emoji: '🩹' },
             { id: 'autre', label: 'Autre', emoji: '💬' }
           ].map(tab => {
-            const isActive = filterReaction === tab.id;
+            const isToutes = tab.id === 'toutes';
+            const isActive = isToutes
+              ? selectedFilters.length === 0
+              : selectedFilters.includes(tab.id as ReactionType);
+
             return (
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setFilterReaction(tab.id as ReactionType | 'toutes')}
+                onClick={() => toggleFilter(tab.id as ReactionType | 'toutes')}
                 className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold whitespace-nowrap transition-all ${
                   isActive
                     ? 'border-[#5E4B8B] bg-[#5E4B8B] text-white shadow-sm'
                     : 'border-[#E8DFD8] bg-white text-[#2D283E] hover:bg-[#F5EFE6]'
-                } `}>
+                }`}>
                 <span>{tab.emoji}</span>
                 <span>{tab.label}</span>
+                {isActive && !isToutes && <Check className="ml-0.5 h-3 w-3" />}
               </button>
             );
           })}
@@ -105,9 +140,9 @@ export const History: React.FC = () => {
 
       {/* Liste des Injections */}
       {loading ? (
-        <div
-          className="py-10 text-center text-xs font-medium text-[#8E8294]">Chargement
-          de l'historique...</div>
+        <div className="py-10 text-center text-xs font-medium text-[#8E8294]">
+          Chargement de l'historique...
+        </div>
       ) : filteredInjections.length === 0 ? (
         <div
           className="space-y-2 rounded-3xl border border-[#E8DFD8] bg-white p-8 text-center">
@@ -115,16 +150,16 @@ export const History: React.FC = () => {
           <p className="text-sm font-bold text-[#2D283E]">Aucune injection
             trouvée</p>
           <p className="text-xs text-[#8E8294]">
-            {filterReaction === 'toutes'
+            {selectedFilters.length === 0
               ? 'Vous n\'avez pas encore enregistré de saisie.'
-              : 'Aucune injection avec ce type de réaction.'}
+              : 'Aucune injection ne correspond aux filtres sélectionnés.'}
           </p>
         </div>
       ) : (
         <div className="space-y-3">
           {filteredInjections.map(item => {
             const zoneInfo = ZONES_CONFIG.find(z => z.id === item.zone);
-            const reaction = getReactionBadge(item.reaction_type);
+            const itemReactions = getItemReactions(item);
 
             return (
               <div
@@ -138,16 +173,16 @@ export const History: React.FC = () => {
                       {zoneInfo?.emoji || '💉'}
                     </div>
                     <div>
-                      <h3
-                        className="text-sm font-bold text-[#2D283E]">{zoneInfo?.fullLabel || item.zone}</h3>
+                      <h3 className="text-sm font-bold text-[#2D283E]">
+                        {zoneInfo?.fullLabel || item.zone}
+                      </h3>
                       <div>
-                        {/* Affichage de la date brute Supabase */}
-                        <p
-                          className="font-semibold text-[#2D283E] capitalize">{formatDate(item.injected_at)}</p>
-
-                        {/* Affichage de l'heure brute Supabase */}
-                        <p
-                          className="text-xs text-[#8E8294]">{formatTime(item.injected_at)}</p>
+                        <p className="font-semibold text-[#2D283E] capitalize">
+                          {formatDate(item.injected_at)}
+                        </p>
+                        <p className="text-xs text-[#8E8294]">
+                          {formatTime(item.injected_at)}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -165,14 +200,22 @@ export const History: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Badge de Réaction & Détails */}
+                {/* Badges de Réactions Multiples & Détails */}
                 <div
                   className="flex items-center justify-between gap-2 border-t border-[#F5EFE6] pt-2">
-                  <span
-                    className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-bold ${reaction.bg}`}>
-                    <span>{reaction.emoji}</span>
-                    <span>Réaction : {reaction.label}</span>
-                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {itemReactions.map(rType => {
+                      const badge = getReactionBadgeConfig(rType);
+                      return (
+                        <span
+                          key={rType}
+                          className={`flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${badge.bg}`}>
+                          <span>{badge.emoji}</span>
+                          <span>{badge.label}</span>
+                        </span>
+                      );
+                    })}
+                  </div>
 
                   {item.reaction_details && (
                     <span

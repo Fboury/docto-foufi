@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router';
-import { BarChart2, History, Home } from 'lucide-react';
+import { BarChart2, History, Home, User } from 'lucide-react';
 
 export const AppLayout: React.FC = () => {
   const navItems = [
     { to: '/', label: 'Accueil', icon: Home, end: true },
     { to: '/history', label: 'Historique', icon: History, end: false },
-    { to: '/stats', label: 'Statistiques', icon: BarChart2, end: false }
+    { to: '/stats', label: 'Statistiques', icon: BarChart2, end: false },
+    { to: '/profil', label: 'Profil', icon: User, end: false }
   ];
 
   return (

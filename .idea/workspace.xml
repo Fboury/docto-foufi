@@ -4,10 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="more improvements">
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix padding">
+      <change afterPath="$PROJECT_DIR$/src/components/BadgeUnlockModal/BadgeUnlockModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/badges.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/.tmp/tsconfig.app.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.tmp/tsconfig.app.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.vite/deps/_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/AppLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/AppLayout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useInjections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useInjections.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/History/History.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/History/History.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,31 +158,7 @@
       <workItem from="1780667309699" duration="2744000" />
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
-      <workItem from="1787078996709" duration="7255000" />
-    </task>
-    <task id="LOCAL-00013" summary="config fixed">
-      <option name="closed" value="true" />
-      <created>1776017938936</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1776017938936</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Ajout des records">
-      <option name="closed" value="true" />
-      <created>1776020085438</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1776020085438</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Ajout de la vue dynamique">
-      <option name="closed" value="true" />
-      <created>1776021637612</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1776021637612</updated>
+      <workItem from="1787078996709" duration="11704000" />
     </task>
     <task id="LOCAL-00016" summary="Ajout du profil">
       <option name="closed" value="true" />
@@ -543,7 +528,31 @@
       <option name="project" value="LOCAL" />
       <updated>1787139399637</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="fix buidl">
+      <option name="closed" value="true" />
+      <created>1787139541278</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1787139541279</updated>
+    </task>
+    <task id="LOCAL-00063" summary="fix padding">
+      <option name="closed" value="true" />
+      <created>1787139801508</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1787139801508</updated>
+    </task>
+    <task id="LOCAL-00064" summary="fix padding">
+      <option name="closed" value="true" />
+      <created>1787140009132</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1787140009132</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,8 +564,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="AJout modale workout" />
-    <MESSAGE value="tri defi" />
     <MESSAGE value="fix success" />
     <MESSAGE value="fix build" />
     <MESSAGE value="add volume" />
@@ -580,18 +587,9 @@
     <MESSAGE value="some fixes" />
     <MESSAGE value="Ajout stats" />
     <MESSAGE value="more improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="more improvements" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx</url>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="fix buidl" />
+    <MESSAGE value="fix padding" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix padding" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

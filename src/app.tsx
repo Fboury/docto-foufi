@@ -4,6 +4,7 @@ import { AddInjection } from './pages/AddInjection/AddInjection';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { History } from './pages/History/History';
 import { Stats } from './pages/Stats/Stats';
+import { Profile } from './pages/Profile/Profile';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: '/stats',
         element: <Stats />
+      },
+      {
+        path: '/profil',
+        element: <Profile />
       }
     ]
   }
