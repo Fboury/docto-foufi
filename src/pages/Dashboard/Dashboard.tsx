@@ -4,6 +4,7 @@ import { useInjections } from '../../hooks/useInjections';
 import { ZONES_CONFIG } from '../../types/injection';
 import { formatTime } from '../../utils/dateUtils';
 import { NextInjectionTile } from './components/NextInjectionTile';
+import { OrderAlertTile } from './components/OrderAlertTile';
 import {
   ChevronRight,
   Clock,
@@ -117,6 +118,7 @@ export const Dashboard: React.FC = () => {
                 className="text-xs text-[#8E8294]">{formatTime(lastInjection.injected_at)}</span>
             </div>
           )}
+          <OrderAlertTile />
         </>
       )}
     </div>

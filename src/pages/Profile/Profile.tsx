@@ -1,104 +1,116 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, Award, Calendar, CheckCircle2, Lock } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowLeft,
+  Award,
+  Calendar,
+  CheckCircle2,
+  Lock,
+  RefreshCw,
+  ShoppingBag
+} from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
-import { ALL_BADGES } from '../../constants/badges';
+import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
+import { useOrders } from '../../hooks/useOrders';
+import { BadgeDetailModal } from './components/BadgeDetailModal';
 
 export const Profile: React.FC = () => {
+  const [selectedBadge, setSelectedBadge] = useState<{
+    badge: BadgeConfig;
+    unlockedDates: string[];
+  } | null>(null);
+
   const navigate = useNavigate();
   const { injections } = useInjections();
+  const { nhcStats, pharmacyStats, updateOrder } = useOrders();
 
-  // Données fixes pour Bahia Moreau
   const PROFILE_DATA = {
     firstName: 'Bahia',
     lastName: 'Moreau',
-    birthDate: '1996-11-21', // 21/11/1996
+    birthDate: '1996-11-21',
     displayBirthDate: '21 novembre 1996'
   };
 
   const [badgeCounts, setBadgeCounts] = useState<Record<string, number>>({});
+  const [badgeAllDates, setBadgeAllDates] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (injections) {
-      const counts = calculateBadgeCounts(injections);
+      const { counts, allDates } = calculateBadgeStats(injections);
       setBadgeCounts(counts);
+      setBadgeAllDates(allDates);
       setLoading(false);
     }
   }, [injections]);
 
-  // Algorithme de calcul des badges (Global, Zone & Événements)
-  // Algorithme de calcul des badges (Global, Zone & Événements)
-  const calculateBadgeCounts = (items: any[]) => {
+  const calculateBadgeStats = (items: any[]) => {
     const counts: Record<string, number> = {};
+    const allDates: Record<string, string[]> = {};
     const total = items.length;
+
+    // Trier les injections de la plus récente à la plus ancienne pour l'historique
+    const sortedInjectionsDesc = [...items].sort(
+      (a, b) => new Date(b.injected_at).getTime() - new Date(a.injected_at).getTime()
+    );
+    const sortedInjectionsAsc = [...items].sort(
+      (a, b) => new Date(a.injected_at).getTime() - new Date(b.injected_at).getTime()
+    );
+
+    const recordBadge = (key: string, dateIso: string) => {
+      counts[key] = (counts[key] || 0) + 1;
+      if (!allDates[key]) allDates[key] = [];
+      allDates[key].push(dateIso);
+    };
 
     // 1. Jalons globaux
     const GLOBAL_STEPS = [1, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
     GLOBAL_STEPS.forEach(step => {
-      if (total >= step) {
+      if (total >= step && sortedInjectionsAsc[step - 1]) {
         counts[`total_injections_${step}`] = 1;
+        allDates[`total_injections_${step}`] = [sortedInjectionsAsc[step - 1].injected_at];
       }
     });
 
-    // 2. Jalons par zone (tous les 25 jusqu'à 250)
+    // 2. Jalons par zone
     const zoneCounts: Record<string, number> = {};
-    items.forEach(i => {
+    const ZONE_STEPS = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250];
+
+    sortedInjectionsAsc.forEach(i => {
       if (i.zone) {
         zoneCounts[i.zone] = (zoneCounts[i.zone] || 0) + 1;
+        const currentZoneCount = zoneCounts[i.zone];
+
+        ZONE_STEPS.forEach(step => {
+          if (currentZoneCount === step) {
+            recordBadge(`zone_master_${step}`, i.injected_at);
+          }
+        });
       }
     });
 
-    const ZONE_STEPS = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250];
-    ZONE_STEPS.forEach(step => {
-      const zonesMatchingStep = Object.values(zoneCounts).filter(count => count >= step).length;
-      if (zonesMatchingStep > 0) {
-        counts[`zone_master_${step}`] = zonesMatchingStep;
-      }
-    });
-
-    // 3. Dictionnaires des années pour les événements répétables
-    const christmasYears = new Set<number>();
-    const newYearYears = new Set<number>();
-    const halloweenYears = new Set<number>();
-    const bahiaBirthdayYears = new Set<number>();
-    const partnerBirthdayYears = new Set<number>();
-    const coupleAnniversaryYears = new Set<number>();
-    const pacsAnniversaryYears = new Set<number>();
-    const engagementAnniversaryYears = new Set<number>();
-    const test = new Set<number>();
-
-    items.forEach(i => {
+    // 3. Événements répétables (triés du plus récent au plus ancien)
+    sortedInjectionsDesc.forEach(i => {
       if (!i.injected_at) return;
       const d = new Date(i.injected_at);
-      const year = d.getUTCFullYear();
       const month = d.getUTCMonth() + 1;
       const day = d.getUTCDate();
 
-      if (month === 12 && day === 25) christmasYears.add(year);
-      if (month === 1 && day === 1) newYearYears.add(year);
-      if (month === 10 && day === 31) halloweenYears.add(year);
-      if (month === 11 && day === 21) bahiaBirthdayYears.add(year);
-      if (month === 7 && day === 4) partnerBirthdayYears.add(year);
-      if (month === 12 && day === 1) coupleAnniversaryYears.add(year);
-      if (month === 4 && day === 1) pacsAnniversaryYears.add(year);
-      if (month === 8 && day === 1) engagementAnniversaryYears.add(year);
-      if (month === 8 && day === 19) test.add(year);
+      if (month === 12 && day === 25) recordBadge('christmas_injection', i.injected_at);
+      if (month === 1 && day === 1) recordBadge('new_year_injection', i.injected_at);
+      if (month === 10 && day === 31) recordBadge('halloween_injection', i.injected_at);
+      if (month === 11 && day === 21) recordBadge('bahia_birthday_injection', i.injected_at);
+      if (month === 7 && day === 4) recordBadge('partner_birthday_injection', i.injected_at);
+      if (month === 12 && day === 1) recordBadge('couple_anniversary_injection', i.injected_at);
+      if (month === 4 && day === 1) recordBadge('pacs_anniversary_injection', i.injected_at);
+      if (month === 8 && day === 1) recordBadge('engagement_anniversary_injection', i.injected_at);
+      if (month === 8 && day === 19) recordBadge('test', i.injected_at);
     });
 
-    if (christmasYears.size > 0) counts['christmas_injection'] = christmasYears.size;
-    if (newYearYears.size > 0) counts['new_year_injection'] = newYearYears.size;
-    if (halloweenYears.size > 0) counts['halloween_injection'] = halloweenYears.size;
-    if (bahiaBirthdayYears.size > 0) counts['bahia_birthday_injection'] = bahiaBirthdayYears.size;
-    if (partnerBirthdayYears.size > 0) counts['partner_birthday_injection'] = partnerBirthdayYears.size;
-    if (coupleAnniversaryYears.size > 0) counts['couple_anniversary_injection'] = coupleAnniversaryYears.size;
-    if (pacsAnniversaryYears.size > 0) counts['pacs_anniversary_injection'] = pacsAnniversaryYears.size;
-    if (engagementAnniversaryYears.size > 0)
-      counts['engagement_anniversary_injection'] = engagementAnniversaryYears.size;
-    if (test.size > 0) counts['test'] = test.size;
-
-    return counts;
+    return { counts, allDates };
   };
+
   if (loading) {
     return (
       <div
@@ -123,6 +135,7 @@ export const Profile: React.FC = () => {
         <h1 className="font-serif text-2xl font-bold text-[#5E4B8B]">Mon
           Profil</h1>
       </div>
+
       {/* TUILE DONNÉES FIXES */}
       <div
         className="space-y-4 rounded-3xl border border-[#E8DFD8] bg-white p-5 shadow-xs">
@@ -146,7 +159,107 @@ export const Profile: React.FC = () => {
             className="font-medium">Née le {PROFILE_DATA.displayBirthDate}</span>
         </div>
       </div>
-      {/* TROPHÉES & BADGES */}
+
+      {/* SECTION COMMANDES DE MÉDICAMENTS */}
+      <div className="space-y-2.5">
+        <div
+          className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
+          <ShoppingBag className="h-3.5 w-3.5" />
+          <span>Commandes mensuelles (tous les 30j)</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {/* TUILE NHC */}
+          <div
+            className={`space-y-2.5 rounded-3xl border p-4 transition-all ${
+              nhcStats.isWarning ? 'border-amber-300 bg-amber-50/60' : 'border-[#E8DFD8] bg-white'
+            }`}>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-extrabold text-[#2D283E]">NHC</span>
+              {nhcStats.isDue ? (
+                <span
+                  className="flex items-center gap-1 rounded-full bg-rose-100 px-2 py-0.5 text-[9px] font-extrabold text-rose-700">
+                  <AlertCircle className="h-3 w-3" /> À faire !
+                </span>
+              ) : nhcStats.isWarning ? (
+                <span
+                  className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-extrabold text-amber-800">
+                  J-{nhcStats.daysLeft}
+                </span>
+              ) : (
+                <span
+                  className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-extrabold text-emerald-700">
+                  OK ({nhcStats.daysLeft}j)
+                </span>
+              )}
+            </div>
+
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-[#8E8294]">Prochaine commande :</p>
+              <p
+                className="text-sm font-bold text-[#5E4B8B]">{nhcStats.nextDateStr}</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (confirm('Confirmer que la commande NHC a été effectuée aujourd\'hui ?')) {
+                  updateOrder('nhc');
+                }
+              }}
+              className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[#5E4B8B] py-2 text-[11px] font-bold text-white transition-all hover:bg-[#4A3B70]">
+              <RefreshCw className="h-3 w-3" />
+              <span>Renouveler</span>
+            </button>
+          </div>
+
+          {/* TUILE PHARMACIE */}
+          <div
+            className={`space-y-2.5 rounded-3xl border p-4 transition-all ${
+              pharmacyStats.isWarning ? 'border-amber-300 bg-amber-50/60' : 'border-[#E8DFD8] bg-white'
+            }`}>
+            <div className="flex items-center justify-between">
+              <span
+                className="text-xs font-extrabold text-[#2D283E]">Pharmacie</span>
+              {pharmacyStats.isDue ? (
+                <span
+                  className="flex items-center gap-1 rounded-full bg-rose-100 px-2 py-0.5 text-[9px] font-extrabold text-rose-700">
+                  <AlertCircle className="h-3 w-3" /> À faire !
+                </span>
+              ) : pharmacyStats.isWarning ? (
+                <span
+                  className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-extrabold text-amber-800">
+                  J-{pharmacyStats.daysLeft}
+                </span>
+              ) : (
+                <span
+                  className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-extrabold text-emerald-700">
+                  OK ({pharmacyStats.daysLeft}j)
+                </span>
+              )}
+            </div>
+
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-[#8E8294]">Prochaine commande :</p>
+              <p
+                className="text-sm font-bold text-[#5E4B8B]">{pharmacyStats.nextDateStr}</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (confirm('Confirmer que la commande Pharmacie a été effectuée aujourd\'hui ?')) {
+                  updateOrder('pharmacy');
+                }
+              }}
+              className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[#5E4B8B] py-2 text-[11px] font-bold text-white transition-all hover:bg-[#4A3B70]">
+              <RefreshCw className="h-3 w-3" />
+              <span>Renouveler</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* TROPHÉES & BADGES */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
@@ -166,20 +279,25 @@ export const Profile: React.FC = () => {
             .sort((a, b) => {
               const countA = badgeCounts[a.key] || 0;
               const countB = badgeCounts[b.key] || 0;
-              // Met les badges débloqués (> 0) au début
               return (countB > 0 ? 1 : 0) - (countA > 0 ? 1 : 0);
             })
             .map(badge => {
               const count = badgeCounts[badge.key] || 0;
               const isUnlocked = count > 0;
+              const dates = badgeAllDates[badge.key] || [];
 
               return (
                 <div
                   key={badge.key}
+                  onClick={() => {
+                    if (isUnlocked) {
+                      setSelectedBadge({ badge, unlockedDates: dates });
+                    }
+                  }}
                   className={`relative flex flex-col justify-between rounded-2xl border p-3.5 transition-all ${
                     isUnlocked
-                      ? 'border-[#E8DFD8] bg-white shadow-xs'
-                      : 'border-dashed border-gray-200 bg-gray-50/60 opacity-50'
+                      ? 'cursor-pointer border-[#E8DFD8] bg-white shadow-xs hover:border-[#5E4B8B] hover:shadow-md active:scale-95'
+                      : 'cursor-not-allowed border-dashed border-gray-200 bg-gray-50/60 opacity-50'
                   }`}>
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
@@ -210,7 +328,15 @@ export const Profile: React.FC = () => {
             })}
         </div>
       </div>
+
+      {/* Modale de Détail du Badge au clic */}
+      {selectedBadge && (
+        <BadgeDetailModal
+          badge={selectedBadge.badge}
+          unlockedDates={selectedBadge.unlockedDates}
+          onClose={() => setSelectedBadge(null)}
+        />
+      )}
     </div>
   );
 };
-;
