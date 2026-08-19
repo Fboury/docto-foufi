@@ -111,21 +111,21 @@ export const AddInjection: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Reconstitution précise de la date ISO locale en conservant l'heure exacte saisie
-      const localDate = new Date(injectionDate);
-      const formattedDateTime = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000).toISOString();
+      // injectionDate contient ex: "2026-08-19T19:30"
+      // En ajoutant ":00.000Z", on stocke exactement "19:30" dans Supabase sans aucune conversion
+      const exactIsoString = `${injectionDate}:00.000Z`;
 
       const beforeKeys = getUnlockedKeys(injections);
 
       await addInjectionWithPreviousReaction(
         selectedZone,
-        formattedDateTime,
+        exactIsoString,
         selectedReactions.length > 0 ? selectedReactions : ['aucune'],
         reactionDetails
       );
 
       const newEntry = {
-        injected_at: formattedDateTime,
+        injected_at: exactIsoString,
         zone: selectedZone,
         reaction_types: selectedReactions.length > 0 ? selectedReactions : ['aucune']
       };
@@ -147,6 +147,7 @@ export const AddInjection: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
   const selectedZoneData = zonesWithStats.find(z => z.id === selectedZone);
   const recommendedZoneData = zonesWithStats.find(z => z.id === recommendedZone);
 
@@ -288,11 +289,12 @@ export const AddInjection: React.FC = () => {
               sur le dernier site ?</p>
           </div>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {[
               { id: 'aucune', label: 'Aucune', emoji: '✨' },
               { id: 'bleu', label: 'Bleu', emoji: '🫐' },
               { id: 'douleur', label: 'Douleur', emoji: '🩹' },
+              { id: 'sang', label: 'Sang', emoji: '🩸' },
               { id: 'autre', label: 'Autre', emoji: '💬' }
             ].map(item => {
               const isAucune = item.id === 'aucune';

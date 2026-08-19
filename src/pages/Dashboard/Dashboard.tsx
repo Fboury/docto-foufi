@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import { useInjections } from '../../hooks/useInjections';
 import { ZONES_CONFIG } from '../../types/injection';
+import { formatTime } from '../../utils/dateUtils';
 import { NextInjectionTile } from './components/NextInjectionTile';
 import {
   ChevronRight,
@@ -112,14 +113,8 @@ export const Dashboard: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <span className="text-xs text-[#8E8294]">
-                {new Date(lastInjection.injected_at).toLocaleDateString('fr-FR', {
-                  day: 'numeric',
-                  month: 'short',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </span>
+              <span
+                className="text-xs text-[#8E8294]">{formatTime(lastInjection.injected_at)}</span>
             </div>
           )}
         </>

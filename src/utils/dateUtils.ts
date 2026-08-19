@@ -1,20 +1,20 @@
-export const formatTime = (dateString: string) => {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('fr-FR', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'UTC' // Affiche l'heure brute stockée en base sans conversion locale
-  });
+// Formatage de l'heure (ex: 19h30)
+export const formatTime = (isoString: string): string => {
+  if (!isoString) return '';
+  const date = new Date(isoString);
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  return `${hours}h${minutes}`;
 };
 
-export const formatDate = (dateString: string) => {
-  if (!dateString) return '';
-  const date = new Date(dateString);
+// Formatage de la date (ex: 19 août 2026)
+export const formatDate = (isoString: string): string => {
+  if (!isoString) return '';
+  const date = new Date(isoString);
   return date.toLocaleDateString('fr-FR', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-    timeZone: 'UTC'
+    timeZone: 'UTC' // Force la lecture UTC sans décalage
   });
 };

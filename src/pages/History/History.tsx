@@ -60,6 +60,12 @@ export const History: React.FC = () => {
           emoji: '🩹',
           bg: 'bg-rose-100 text-rose-800 border-rose-200'
         };
+      case 'sang':
+        return {
+          label: 'Sang',
+          emoji: '🩸',
+          bg: 'bg-red-100 text-red-800 border-red-200'
+        };
       case 'autre':
         return {
           label: 'Autre',
@@ -112,12 +118,11 @@ export const History: React.FC = () => {
             { id: 'aucune', label: 'Aucune', emoji: '✨' },
             { id: 'bleu', label: 'Bleu', emoji: '🫐' },
             { id: 'douleur', label: 'Douleur', emoji: '🩹' },
+            { id: 'sang', label: 'Sang', emoji: '🩸' },
             { id: 'autre', label: 'Autre', emoji: '💬' }
           ].map(tab => {
             const isToutes = tab.id === 'toutes';
-            const isActive = isToutes
-              ? selectedFilters.length === 0
-              : selectedFilters.includes(tab.id as ReactionType);
+            const isActive = isToutes ? selectedFilters.length === 0 : selectedFilters.includes(tab.id as ReactionType);
 
             return (
               <button
@@ -140,9 +145,9 @@ export const History: React.FC = () => {
 
       {/* Liste des Injections */}
       {loading ? (
-        <div className="py-10 text-center text-xs font-medium text-[#8E8294]">
-          Chargement de l'historique...
-        </div>
+        <div
+          className="py-10 text-center text-xs font-medium text-[#8E8294]">Chargement
+          de l'historique...</div>
       ) : filteredInjections.length === 0 ? (
         <div
           className="space-y-2 rounded-3xl border border-[#E8DFD8] bg-white p-8 text-center">
@@ -173,16 +178,13 @@ export const History: React.FC = () => {
                       {zoneInfo?.emoji || '💉'}
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-[#2D283E]">
-                        {zoneInfo?.fullLabel || item.zone}
-                      </h3>
+                      <h3
+                        className="text-sm font-bold text-[#2D283E]">{zoneInfo?.fullLabel || item.zone}</h3>
                       <div>
-                        <p className="font-semibold text-[#2D283E] capitalize">
-                          {formatDate(item.injected_at)}
-                        </p>
-                        <p className="text-xs text-[#8E8294]">
-                          {formatTime(item.injected_at)}
-                        </p>
+                        <p
+                          className="font-semibold text-[#2D283E] capitalize">{formatDate(item.injected_at)}</p>
+                        <p
+                          className="text-xs text-[#8E8294]">{formatTime(item.injected_at)}</p>
                       </div>
                     </div>
                   </div>

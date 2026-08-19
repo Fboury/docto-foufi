@@ -9,7 +9,7 @@ export type InjectionZone =
   | 'flanc_gauche'
   | 'flanc_droit';
 
-export type ReactionType = 'aucune' | 'bleu' | 'douleur' | 'autre';
+export type ReactionType = 'aucune' | 'bleu' | 'douleur' | 'sang' | 'autre';
 
 export interface ZoneData {
   id: InjectionZone;

@@ -19,20 +19,25 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
     return null;
   }
 
+  // Parse de la date Supabase en UTC pur
   const lastTime = new Date(lastInjection.injected_at).getTime();
-  const currentTime = now.getTime();
+
+  // Temps actuel ajusté en UTC pour éviter tout décalage avec la date Supabase
+  const currentTime = now.getTime() - now.getTimezoneOffset() * 60000;
 
   // Calcul des fenêtres de 23h et 24h en ms
   const targetMinTime = lastTime + 23 * 60 * 60 * 1000; // 23h
   const targetMaxTime = lastTime + 24 * 60 * 60 * 1000; // 24h
 
-  // Formatage des heures recommandées (ex: "19h30 - 20h30")
+  // Formatage des heures recommandées en UTC strict (ex: "19h30 - 20h30")
   const formatTime = (timestamp: number) => {
-    return new Date(timestamp).toLocaleTimeString('fr-FR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'UTC' // Garantit qu'on affiche l'heure brute de Supabase
-    });
+    return new Date(timestamp)
+      .toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'UTC'
+      })
+      .replace(':', 'h');
   };
 
   const minTimeString = formatTime(targetMinTime);
@@ -131,4 +136,3 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
     </div>
   );
 };
-;

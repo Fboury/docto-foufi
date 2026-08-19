@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="Ajout des badges">
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="ajout sang">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/badges.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/badges.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/History/History.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/History/History.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/injection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/injection.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/dateUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/dateUtils.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,15 +154,7 @@
       <workItem from="1780667309699" duration="2744000" />
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
-      <workItem from="1787078996709" duration="12483000" />
-    </task>
-    <task id="LOCAL-00017" summary="maj legende">
-      <option name="closed" value="true" />
-      <created>1776022898253</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1776022898253</updated>
+      <workItem from="1787078996709" duration="13986000" />
     </task>
     <task id="LOCAL-00018" summary="fix records">
       <option name="closed" value="true" />
@@ -544,7 +540,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787144561893</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="ajout d'un badge de test">
+      <option name="closed" value="true" />
+      <created>1787145358527</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1787145358527</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -556,7 +560,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix build" />
     <MESSAGE value="add volume" />
     <MESSAGE value="upgrade records" />
     <MESSAGE value="try to fix" />
@@ -581,7 +584,8 @@
     <MESSAGE value="fix buidl" />
     <MESSAGE value="fix padding" />
     <MESSAGE value="Ajout des badges" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout des badges" />
+    <MESSAGE value="ajout d'un badge de test" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajout d'un badge de test" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
