@@ -4,16 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="ajout snag et fix heure">
-      <change afterPath="$PROJECT_DIR$/src/hooks/useOrders.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/OrderAlertTile.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Profile/components/BadgeDetailModal.tsx" afterDir="false" />
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="ajout medicamentzs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants/badges.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/badges.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/goal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/orders.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/records.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/workout.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,15 +150,7 @@
       <workItem from="1780667309699" duration="2744000" />
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
-      <workItem from="1787078996709" duration="15607000" />
-    </task>
-    <task id="LOCAL-00019" summary="update sets &amp; reps">
-      <option name="closed" value="true" />
-      <created>1776061764916</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1776061764916</updated>
+      <workItem from="1787078996709" duration="19470000" />
     </task>
     <task id="LOCAL-00020" summary="supprimer un exo">
       <option name="closed" value="true" />
@@ -549,7 +536,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787163680378</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="ajout medicamentzs">
+      <option name="closed" value="true" />
+      <created>1787165321547</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1787165321547</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -561,7 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="upgrade records" />
     <MESSAGE value="try to fix" />
     <MESSAGE value="wip : création plan" />
     <MESSAGE value="wip: creation plan velo" />
@@ -586,7 +580,8 @@
     <MESSAGE value="Ajout des badges" />
     <MESSAGE value="ajout d'un badge de test" />
     <MESSAGE value="ajout snag et fix heure" />
-    <option name="LAST_COMMIT_MESSAGE" value="ajout snag et fix heure" />
+    <MESSAGE value="ajout medicamentzs" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajout medicamentzs" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

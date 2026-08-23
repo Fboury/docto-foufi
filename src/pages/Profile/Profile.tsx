@@ -50,10 +50,7 @@ export const Profile: React.FC = () => {
     const allDates: Record<string, string[]> = {};
     const total = items.length;
 
-    // Trier les injections de la plus récente à la plus ancienne pour l'historique
-    const sortedInjectionsDesc = [...items].sort(
-      (a, b) => new Date(b.injected_at).getTime() - new Date(a.injected_at).getTime()
-    );
+    // Trier les injections dans l'ordre chronologique (de la plus ancienne à la plus récente)
     const sortedInjectionsAsc = [...items].sort(
       (a, b) => new Date(a.injected_at).getTime() - new Date(b.injected_at).getTime()
     );
@@ -90,16 +87,30 @@ export const Profile: React.FC = () => {
       }
     });
 
-    // 3. Événements répétables (triés du plus récent au plus ancien)
-    sortedInjectionsDesc.forEach(i => {
+    // 3. Événements, Habitudes & Saisons (ordre chronologique)
+    sortedInjectionsAsc.forEach(i => {
       if (!i.injected_at) return;
       const d = new Date(i.injected_at);
       const month = d.getUTCMonth() + 1;
       const day = d.getUTCDate();
+      const hour = d.getUTCHours();
+      const dayOfWeek = d.getUTCDay();
 
+      // Moments de la journée & Weekend
+      if (hour >= 6 && hour < 9) recordBadge('early_bird', i.injected_at);
+      if (hour >= 22 || hour < 2) recordBadge('night_owl', i.injected_at);
+      if (dayOfWeek === 0 || dayOfWeek === 6) recordBadge('weekend_warrior', i.injected_at);
+
+      // Dates calendrier & Saisons
+      if (month === 2 && day === 14) recordBadge('valentines_day', i.injected_at);
+      if (month === 3 && day === 21) recordBadge('spring_injection', i.injected_at);
+      if (month === 6 && day === 21) recordBadge('summer_vibes', i.injected_at);
+      if (month === 9 && day === 21) recordBadge('autumn_injection', i.injected_at);
       if (month === 12 && day === 25) recordBadge('christmas_injection', i.injected_at);
       if (month === 1 && day === 1) recordBadge('new_year_injection', i.injected_at);
       if (month === 10 && day === 31) recordBadge('halloween_injection', i.injected_at);
+
+      // Anniversaires & Fêtes
       if (month === 11 && day === 21) recordBadge('bahia_birthday_injection', i.injected_at);
       if (month === 7 && day === 4) recordBadge('partner_birthday_injection', i.injected_at);
       if (month === 12 && day === 1) recordBadge('couple_anniversary_injection', i.injected_at);

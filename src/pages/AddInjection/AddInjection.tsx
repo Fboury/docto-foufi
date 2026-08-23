@@ -16,14 +16,22 @@ import {
 } from '../../components/BadgeUnlockModal/BadgeUnlockModal';
 
 // Helper de détection des clés de badges débloqués
-const getUnlockedKeys = (items: any[]) => {
+export const getUnlockedKeys = (items: any[]): string[] => {
   const keys: string[] = [];
   const total = items.length;
+
+  if (total === 0) return keys;
+
+  const sortedInjectionsAsc = [...items].sort(
+    (a, b) => new Date(a.injected_at).getTime() - new Date(b.injected_at).getTime()
+  );
 
   // 1. Jalons globaux
   const GLOBAL_STEPS = [1, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
   GLOBAL_STEPS.forEach(step => {
-    if (total >= step) keys.push(`total_injections_${step}`);
+    if (total >= step) {
+      keys.push(`total_injections_${step}`);
+    }
   });
 
   // 2. Jalons par zone
@@ -32,33 +40,44 @@ const getUnlockedKeys = (items: any[]) => {
     if (i.zone) zoneCounts[i.zone] = (zoneCounts[i.zone] || 0) + 1;
   });
 
-  [25, 50, 75, 100, 125, 150, 175, 200, 225, 250].forEach(step => {
-    if (Object.values(zoneCounts).some(c => c >= step)) {
+  const ZONE_STEPS = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250];
+  ZONE_STEPS.forEach(step => {
+    if (Object.values(zoneCounts).some(count => count >= step)) {
       keys.push(`zone_master_${step}`);
     }
   });
 
-  // 3. Événements et dates spéciales
+  // 3. Événements, Habitudes & Saisons
   items.forEach(i => {
     if (!i.injected_at) return;
     const d = new Date(i.injected_at);
-    const m = d.getUTCMonth() + 1;
+    const month = d.getUTCMonth() + 1;
     const day = d.getUTCDate();
+    const hour = d.getUTCHours();
+    const dayOfWeek = d.getUTCDay();
 
-    if (m === 12 && day === 25) keys.push('christmas_injection');
-    if (m === 1 && day === 1) keys.push('new_year_injection');
-    if (m === 10 && day === 31) keys.push('halloween_injection');
-    if (m === 11 && day === 21) keys.push('bahia_birthday_injection');
-    if (m === 7 && day === 4) keys.push('partner_birthday_injection');
-    if (m === 12 && day === 1) keys.push('couple_anniversary_injection');
-    if (m === 4 && day === 1) keys.push('pacs_anniversary_injection');
-    if (m === 8 && day === 1) keys.push('engagement_anniversary_injection');
-    if (m === 8 && day === 19) keys.push('test');
+    if (hour >= 6 && hour < 9) keys.push('early_bird');
+    if (hour >= 22 || hour < 2) keys.push('night_owl');
+    if (dayOfWeek === 0 || dayOfWeek === 6) keys.push('weekend_warrior');
+
+    if (month === 2 && day === 14) keys.push('valentines_day');
+    if (month === 3 && day === 21) keys.push('spring_injection');
+    if (month === 6 && day === 21) keys.push('summer_vibes');
+    if (month === 9 && day === 21) keys.push('autumn_injection');
+    if (month === 12 && day === 25) keys.push('christmas_injection');
+    if (month === 1 && day === 1) keys.push('new_year_injection');
+    if (month === 10 && day === 31) keys.push('halloween_injection');
+
+    if (month === 11 && day === 21) keys.push('bahia_birthday_injection');
+    if (month === 7 && day === 4) keys.push('partner_birthday_injection');
+    if (month === 12 && day === 1) keys.push('couple_anniversary_injection');
+    if (month === 4 && day === 1) keys.push('pacs_anniversary_injection');
+    if (month === 8 && day === 1) keys.push('engagement_anniversary_injection');
+    if (month === 8 && day === 19) keys.push('test');
   });
 
-  return keys;
+  return Array.from(new Set(keys));
 };
-
 export const AddInjection: React.FC = () => {
   const navigate = useNavigate();
   const {
