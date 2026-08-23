@@ -9,6 +9,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
+import { useStocks } from '../../hooks/useStocks';
 import { InjectionZone, ReactionType } from '../../types/injection';
 import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
 import {
@@ -21,10 +22,6 @@ export const getUnlockedKeys = (items: any[]): string[] => {
   const total = items.length;
 
   if (total === 0) return keys;
-
-  const sortedInjectionsAsc = [...items].sort(
-    (a, b) => new Date(a.injected_at).getTime() - new Date(b.injected_at).getTime()
-  );
 
   // 1. Jalons globaux
   const GLOBAL_STEPS = [1, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
@@ -78,6 +75,7 @@ export const getUnlockedKeys = (items: any[]): string[] => {
 
   return Array.from(new Set(keys));
 };
+
 export const AddInjection: React.FC = () => {
   const navigate = useNavigate();
   const {
@@ -87,6 +85,7 @@ export const AddInjection: React.FC = () => {
     loading,
     addInjectionWithPreviousReaction
   } = useInjections();
+  const { decrementStockForInjection } = useStocks();
 
   const [selectedZone, setSelectedZone] = useState<InjectionZone>(recommendedZone);
   const [selectedReactions, setSelectedReactions] = useState<ReactionType[]>([]);
@@ -96,7 +95,6 @@ export const AddInjection: React.FC = () => {
   // Nouveaux badges débloqués lors du submit
   const [newlyUnlocked, setNewlyUnlocked] = useState<BadgeConfig[]>([]);
 
-  // Mettre à jour la sélection par défaut une fois les données chargées
   useEffect(() => {
     if (recommendedZone) {
       setSelectedZone(recommendedZone);
@@ -109,7 +107,6 @@ export const AddInjection: React.FC = () => {
     return now.toISOString().slice(0, 16);
   });
 
-  // Toggle pour la sélection multiple de réactions
   const toggleReaction = (type: ReactionType) => {
     if (type === 'aucune') {
       setSelectedReactions([]);
@@ -130,10 +127,7 @@ export const AddInjection: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // injectionDate contient ex: "2026-08-19T19:30"
-      // En ajoutant ":00.000Z", on stocke exactement "19:30" dans Supabase sans aucune conversion
       const exactIsoString = `${injectionDate}:00.000Z`;
-
       const beforeKeys = getUnlockedKeys(injections);
 
       await addInjectionWithPreviousReaction(
@@ -142,6 +136,9 @@ export const AddInjection: React.FC = () => {
         selectedReactions.length > 0 ? selectedReactions : ['aucune'],
         reactionDetails
       );
+
+      // Décrémentation automatique du stock
+      await decrementStockForInjection();
 
       const newEntry = {
         injected_at: exactIsoString,
@@ -262,7 +259,7 @@ export const AddInjection: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Grille 3x3 Démockée */}
+        {/* 3. Grille des zones */}
         <div className="space-y-2.5">
           <label
             className="px-1 text-xs font-bold tracking-wider text-[#8E8294] uppercase">Sélectionner
@@ -283,8 +280,8 @@ export const AddInjection: React.FC = () => {
                       : 'hover:opacity-95'
                   } ${
                     !zone.isRecent
-                      ? 'border border-[#D3C1E5] bg-[#E5D9F2] text-[#5E4B8B]' // Lilas
-                      : 'border border-[#DFC8A6] bg-[#EFE3C8] text-[#8C6D46]' // Sable
+                      ? 'border border-[#D3C1E5] bg-[#E5D9F2] text-[#5E4B8B]'
+                      : 'border border-[#DFC8A6] bg-[#EFE3C8] text-[#8C6D46]'
                   } `}>
                   <span className="mb-0.5 text-xl">{zone.emoji}</span>
                   <span
@@ -298,7 +295,7 @@ export const AddInjection: React.FC = () => {
           </div>
         </div>
 
-        {/* 4. Réaction (Sélection Multiple) */}
+        {/* 4. Réactions */}
         <div
           className="space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-4.5 shadow-sm">
           <div>

@@ -46,12 +46,17 @@ export const Stats: React.FC = () => {
   }
 
   // --- 1. CALCUL DES RÉACTIONS ---
+  // --- 1. CALCUL DES RÉACTIONS (Gère la sélection multiple reaction_types) ---
   const reactionCounts = {
-    aucune: injections.filter(i => i.reaction_type === 'aucune' || !i.reaction_type).length,
-    bleu: injections.filter(i => i.reaction_type === 'bleu').length,
-    douleur: injections.filter(i => i.reaction_type === 'douleur').length,
-    autre: injections.filter(i => i.reaction_type === 'autre').length
+    aucune: injections.filter(
+      i => !i.reaction_types || i.reaction_types.length === 0 || i.reaction_types.includes('aucune')
+    ).length,
+    bleu: injections.filter(i => i.reaction_types?.includes('bleu') || i.reaction_type === 'bleu').length,
+    douleur: injections.filter(i => i.reaction_types?.includes('douleur') || i.reaction_type === 'douleur').length,
+    sang: injections.filter(i => i.reaction_types?.includes('sang') || i.reaction_type === 'sang').length,
+    autre: injections.filter(i => i.reaction_types?.includes('autre') || i.reaction_type === 'autre').length
   };
+  console.log('reactionCounts', reactionCounts);
 
   const toleranceRate = Math.round((reactionCounts.aucune / totalInjections) * 100);
 
@@ -189,21 +194,31 @@ export const Stats: React.FC = () => {
           <div className="space-y-1.5">
             <div
               className="flex h-3 w-full overflow-hidden rounded-full bg-gray-100">
+              {/* Aucune réaction : Vert émeraude */}
               <div
                 style={{ width: `${(reactionCounts.aucune / totalInjections) * 100}%` }}
                 className="bg-emerald-400"
                 title="Aucune"
               />
+              {/* Bleu : Bleu doux */}
               <div
                 style={{ width: `${(reactionCounts.bleu / totalInjections) * 100}%` }}
                 className="bg-blue-400"
                 title="Bleu"
               />
+              {/* Douleur : Rose vif */}
               <div
                 style={{ width: `${(reactionCounts.douleur / totalInjections) * 100}%` }}
                 className="bg-rose-400"
                 title="Douleur"
               />
+              {/* Sang : Rouge rubis / Sang */}
+              <div
+                style={{ width: `${(reactionCounts.sang / totalInjections) * 100}%` }}
+                className="bg-red-600"
+                title="Sang"
+              />
+              {/* Autre : Violet / Ambre doux */}
               <div
                 style={{ width: `${(reactionCounts.autre / totalInjections) * 100}%` }}
                 className="bg-amber-400"
@@ -224,6 +239,12 @@ export const Stats: React.FC = () => {
               <span className="flex items-center gap-1 font-medium">
                 <span className="h-2 w-2 rounded-full bg-rose-400" /> 🩹 Douleur ({reactionCounts.douleur})
               </span>
+              {reactionCounts.sang > 0 && (
+                <span className="flex items-center gap-1 font-medium">
+                  <span
+                    className="h-2 w-2 rounded-full bg-red-600" /> 🩸 Sang ({reactionCounts.sang})
+                </span>
+              )}
               {reactionCounts.autre > 0 && (
                 <span className="flex items-center gap-1 font-medium">
                   <span className="h-2 w-2 rounded-full bg-amber-400" /> 💬 Autre ({reactionCounts.autre})
@@ -351,3 +372,4 @@ export const Stats: React.FC = () => {
     </div>
   );
 };
+;

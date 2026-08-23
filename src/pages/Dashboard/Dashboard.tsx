@@ -5,6 +5,7 @@ import { ZONES_CONFIG } from '../../types/injection';
 import { formatTime } from '../../utils/dateUtils';
 import { NextInjectionTile } from './components/NextInjectionTile';
 import { OrderAlertTile } from './components/OrderAlertTile';
+import { StockWidgetTile } from './components/StockWidgetTile';
 import {
   ChevronRight,
   Clock,
@@ -119,6 +120,7 @@ export const Dashboard: React.FC = () => {
             </div>
           )}
           <OrderAlertTile />
+          <StockWidgetTile />
         </>
       )}
     </div>

@@ -1,18 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import {
-  AlertCircle,
-  ArrowLeft,
-  Award,
-  Calendar,
-  CheckCircle2,
-  Lock,
-  RefreshCw,
-  ShoppingBag
-} from 'lucide-react';
+import { ArrowLeft, Award, Calendar, CheckCircle2, Lock } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
 import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
-import { useOrders } from '../../hooks/useOrders';
 import { BadgeDetailModal } from './components/BadgeDetailModal';
 
 export const Profile: React.FC = () => {
@@ -23,7 +13,6 @@ export const Profile: React.FC = () => {
 
   const navigate = useNavigate();
   const { injections } = useInjections();
-  const { nhcStats, pharmacyStats, updateOrder } = useOrders();
 
   const PROFILE_DATA = {
     firstName: 'Bahia',
@@ -168,106 +157,6 @@ export const Profile: React.FC = () => {
           <Calendar className="h-4 w-4 text-[#5E4B8B]" />
           <span
             className="font-medium">Née le {PROFILE_DATA.displayBirthDate}</span>
-        </div>
-      </div>
-
-      {/* SECTION COMMANDES DE MÉDICAMENTS */}
-      <div className="space-y-2.5">
-        <div
-          className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
-          <ShoppingBag className="h-3.5 w-3.5" />
-          <span>Commandes mensuelles (tous les 30j)</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          {/* TUILE NHC */}
-          <div
-            className={`space-y-2.5 rounded-3xl border p-4 transition-all ${
-              nhcStats.isWarning ? 'border-amber-300 bg-amber-50/60' : 'border-[#E8DFD8] bg-white'
-            }`}>
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold text-[#2D283E]">NHC</span>
-              {nhcStats.isDue ? (
-                <span
-                  className="flex items-center gap-1 rounded-full bg-rose-100 px-2 py-0.5 text-[9px] font-extrabold text-rose-700">
-                  <AlertCircle className="h-3 w-3" /> À faire !
-                </span>
-              ) : nhcStats.isWarning ? (
-                <span
-                  className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-extrabold text-amber-800">
-                  J-{nhcStats.daysLeft}
-                </span>
-              ) : (
-                <span
-                  className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-extrabold text-emerald-700">
-                  OK ({nhcStats.daysLeft}j)
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-0.5">
-              <p className="text-[10px] text-[#8E8294]">Prochaine commande :</p>
-              <p
-                className="text-sm font-bold text-[#5E4B8B]">{nhcStats.nextDateStr}</p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                if (confirm('Confirmer que la commande NHC a été effectuée aujourd\'hui ?')) {
-                  updateOrder('nhc');
-                }
-              }}
-              className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[#5E4B8B] py-2 text-[11px] font-bold text-white transition-all hover:bg-[#4A3B70]">
-              <RefreshCw className="h-3 w-3" />
-              <span>Renouveler</span>
-            </button>
-          </div>
-
-          {/* TUILE PHARMACIE */}
-          <div
-            className={`space-y-2.5 rounded-3xl border p-4 transition-all ${
-              pharmacyStats.isWarning ? 'border-amber-300 bg-amber-50/60' : 'border-[#E8DFD8] bg-white'
-            }`}>
-            <div className="flex items-center justify-between">
-              <span
-                className="text-xs font-extrabold text-[#2D283E]">Pharmacie</span>
-              {pharmacyStats.isDue ? (
-                <span
-                  className="flex items-center gap-1 rounded-full bg-rose-100 px-2 py-0.5 text-[9px] font-extrabold text-rose-700">
-                  <AlertCircle className="h-3 w-3" /> À faire !
-                </span>
-              ) : pharmacyStats.isWarning ? (
-                <span
-                  className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-extrabold text-amber-800">
-                  J-{pharmacyStats.daysLeft}
-                </span>
-              ) : (
-                <span
-                  className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-extrabold text-emerald-700">
-                  OK ({pharmacyStats.daysLeft}j)
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-0.5">
-              <p className="text-[10px] text-[#8E8294]">Prochaine commande :</p>
-              <p
-                className="text-sm font-bold text-[#5E4B8B]">{pharmacyStats.nextDateStr}</p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                if (confirm('Confirmer que la commande Pharmacie a été effectuée aujourd\'hui ?')) {
-                  updateOrder('pharmacy');
-                }
-              }}
-              className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[#5E4B8B] py-2 text-[11px] font-bold text-white transition-all hover:bg-[#4A3B70]">
-              <RefreshCw className="h-3 w-3" />
-              <span>Renouveler</span>
-            </button>
-          </div>
         </div>
       </div>
 
