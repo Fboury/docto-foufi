@@ -47,16 +47,19 @@ export const Stats: React.FC = () => {
 
   // --- 1. CALCUL DES RÉACTIONS ---
   // --- 1. CALCUL DES RÉACTIONS (Gère la sélection multiple reaction_types) ---
+  // --- 1. CALCUL DES RÉACTION (Compatible TypeScript & rétrocompatible) ---
   const reactionCounts = {
     aucune: injections.filter(
-      i => !i.reaction_types || i.reaction_types.length === 0 || i.reaction_types.includes('aucune')
+      (i: any) =>
+        (!i.reaction_types || i.reaction_types.length === 0 || i.reaction_types.includes('aucune')) &&
+        (!i.reaction_type || i.reaction_type === 'aucune')
     ).length,
-    bleu: injections.filter(i => i.reaction_types?.includes('bleu') || i.reaction_type === 'bleu').length,
-    douleur: injections.filter(i => i.reaction_types?.includes('douleur') || i.reaction_type === 'douleur').length,
-    sang: injections.filter(i => i.reaction_types?.includes('sang') || i.reaction_type === 'sang').length,
-    autre: injections.filter(i => i.reaction_types?.includes('autre') || i.reaction_type === 'autre').length
+    bleu: injections.filter((i: any) => i.reaction_types?.includes('bleu') || i.reaction_type === 'bleu').length,
+    douleur: injections.filter((i: any) => i.reaction_types?.includes('douleur') || i.reaction_type === 'douleur')
+      .length,
+    sang: injections.filter((i: any) => i.reaction_types?.includes('sang') || i.reaction_type === 'sang').length,
+    autre: injections.filter((i: any) => i.reaction_types?.includes('autre') || i.reaction_type === 'autre').length
   };
-  console.log('reactionCounts', reactionCounts);
 
   const toleranceRate = Math.round((reactionCounts.aucune / totalInjections) * 100);
 
@@ -372,4 +375,5 @@ export const Stats: React.FC = () => {
     </div>
   );
 };
+;
 ;

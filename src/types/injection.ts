@@ -21,12 +21,14 @@ export interface ZoneData {
 }
 
 export interface InjectionEntry {
-  id?: string;
-  user_id?: string;
+  id: string;
   injected_at: string;
   zone: InjectionZone;
-  reaction_type: ReactionType;
-  reaction_details?: string;
+  reaction_type?: ReactionType; // Ancien champ (string)
+  reaction_details?: string; // <- Champ ajouté ici !
+  reaction_types?: ReactionType[]; // Nouveau champ (tableau)
+  notes?: string;
+  created_at?: string;
 }
 
 export const ZONES_CONFIG: ZoneData[] = [
