@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, Award, Calendar, CheckCircle2, Lock } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
+import { usePlannedInjections } from '../../hooks/usePlannedInjections';
 import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
 import { BadgeDetailModal } from './components/BadgeDetailModal';
+import { InjectionCalendar } from './components/InjectionCalendar';
 
 export const Profile: React.FC = () => {
   const [selectedBadge, setSelectedBadge] = useState<{
@@ -13,7 +15,7 @@ export const Profile: React.FC = () => {
 
   const navigate = useNavigate();
   const { injections } = useInjections();
-
+  const { plannedInjections } = usePlannedInjections();
   const PROFILE_DATA = {
     firstName: 'Bahia',
     lastName: 'Moreau',
@@ -159,6 +161,10 @@ export const Profile: React.FC = () => {
             className="font-medium">Née le {PROFILE_DATA.displayBirthDate}</span>
         </div>
       </div>
+      <InjectionCalendar
+        injections={injections}
+        plannedInjections={plannedInjections}
+      />
 
       {/* TROPHÉES & BADGES */}
       <div className="space-y-3">
