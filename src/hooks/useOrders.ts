@@ -1,104 +1,97 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 
-export interface OrderRecord {
+export interface OrderState {
   id?: string;
-  provider: 'nhc' | 'pharmacy';
+  provider: string;
   ordered_at: string;
 }
 
 export const useOrders = () => {
-  const [nhcDate, setNhcDate] = useState<string | null>(null);
-  const [pharmacyDate, setPharmacyDate] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [orders, setOrders] = useState<Record<string, OrderState>>({});
+  const [loading, setLoading] = useState(true);
 
-  // Charger les commandes depuis Supabase
-  const fetchOrders = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.from('orders').select('*');
+  const fetchOrders = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from('orders').select('*');
 
-      if (error) throw error;
-
-      if (data) {
-        const nhcRecord = data.find((o: OrderRecord) => o.provider === 'nhc');
-        const pharmacyRecord = data.find((o: OrderRecord) => o.provider === 'pharmacy');
-
-        setNhcDate(nhcRecord ? nhcRecord.ordered_at : null);
-        setPharmacyDate(pharmacyRecord ? pharmacyRecord.ordered_at : null);
-      }
-    } catch (err) {
-      console.error('Erreur lors de la récupération des commandes :', err);
-    } finally {
-      setLoading(false);
+    if (!error && data) {
+      const map: Record<string, OrderState> = {};
+      data.forEach((o) => {
+        map[o.provider] = o;
+      });
+      setOrders(map);
     }
-  }, []);
+    setLoading(false);
+  };
 
   useEffect(() => {
     fetchOrders();
-  }, [fetchOrders]);
+  }, []);
 
-  // Enregistrer ou mettre à jour une commande (upsert)
-  const updateOrder = async (provider: 'nhc' | 'pharmacy', dateString?: string) => {
-    try {
-      // Date brute ISO en UTC
-      const targetDate = dateString ? `${dateString}:00.000Z` : new Date().toISOString();
+  // Met à jour la date de commande pour un fournisseur (nhc, pharmacy, daily_meds)
+  const updateOrder = async (provider: string) => {
+    const nowIso = new Date().toISOString();
 
-      const { error } = await supabase.from('orders').upsert(
-        {
-          provider,
-          ordered_at: targetDate
-        },
-        { onConflict: 'provider' }
-      );
+    // Mise à jour locale optimiste
+    setOrders((prev) => ({
+      ...prev,
+      [provider]: {
+        ...prev[provider],
+        provider,
+        ordered_at: nowIso
+      }
+    }));
 
-      if (error) throw error;
+    const existingOrder = orders[provider];
 
-      // Recharger pour synchroniser l'UI
-      await fetchOrders();
-    } catch (err) {
-      console.error(`Erreur lors de la mise à jour de la commande ${provider} :`, err);
-      alert('Impossible de mettre à jour la commande.');
+    if (existingOrder?.id) {
+      await supabase
+        .from('orders')
+        .update({ ordered_at: nowIso })
+        .eq('id', existingOrder.id);
+    } else {
+      await supabase
+        .from('orders')
+        .insert({ provider, ordered_at: nowIso });
+      fetchOrders();
     }
   };
 
-  // Calcul des statistiques d'échéance (fenêtre de 30 jours)
-  const getOrderStats = (lastDateStr: string | null) => {
-    if (!lastDateStr) {
-      return {
-        daysLeft: 0,
-        isDue: true,
-        isWarning: true,
-        nextDateStr: 'À commander'
-      };
+  const getOrderStats = (provider: string, intervalDays = 30) => {
+    const order = orders[provider];
+    if (!order || !order.ordered_at) {
+      return { daysLeft: 0, isWarning: true, isDue: true, nextDateStr: '--' };
     }
 
-    const last = new Date(lastDateStr);
-    const next = new Date(last.getTime() + 30 * 24 * 60 * 60 * 1000);
-    const now = new Date();
+    const lastDate = new Date(order.ordered_at);
+    const nextDate = new Date(lastDate);
+    nextDate.setDate(nextDate.getDate() + intervalDays);
 
-    const diffMs = next.getTime() - now.getTime();
-    const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    const now = new Date();
+    const diffTime = nextDate.getTime() - now.getTime();
+    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    const nextDateStr = nextDate.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'short'
+    });
 
     return {
       daysLeft,
+      isWarning: daysLeft <= 5 && daysLeft > 0,
       isDue: daysLeft <= 0,
-      isWarning: daysLeft <= 5, // Déclenche l'alerte à J-5
-      nextDateStr: next.toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'short',
-        timeZone: 'UTC'
-      })
+      nextDateStr
     };
   };
 
   return {
-    nhcDate,
-    pharmacyDate,
+    orders,
     loading,
     updateOrder,
-    nhcStats: getOrderStats(nhcDate),
-    pharmacyStats: getOrderStats(pharmacyDate),
-    refreshOrders: fetchOrders
+    nhcStats: getOrderStats('nhc'),
+    pharmacyStats: getOrderStats('pharmacy'),
+    dailyMedsStats: getOrderStats('daily_meds'),
+    refetch: fetchOrders
   };
 };

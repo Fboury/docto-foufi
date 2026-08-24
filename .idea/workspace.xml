@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="badges multiples">
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix build">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Stats/Stats.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Stats/Stats.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/injection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/injection.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useOrders.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useOrders.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useStocks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useStocks.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,14 +151,6 @@
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
       <workItem from="1787078996709" duration="19470000" />
-    </task>
-    <task id="LOCAL-00023" summary="Ajout bouillaaa distance running">
-      <option name="closed" value="true" />
-      <created>1776104625616</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1776104625616</updated>
     </task>
     <task id="LOCAL-00024" summary="fix">
       <option name="closed" value="true" />
@@ -543,7 +536,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787509456278</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="fix build">
+      <option name="closed" value="true" />
+      <created>1787509657797</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1787509657798</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="wip plan relativement propre" />
     <MESSAGE value="ajustem" />
     <MESSAGE value="ajustements" />
     <MESSAGE value="ajout de plusieurs jours autre que 3" />
@@ -580,7 +580,8 @@
     <MESSAGE value="menage" />
     <MESSAGE value="Ajout des stocks" />
     <MESSAGE value="badges multiples" />
-    <option name="LAST_COMMIT_MESSAGE" value="badges multiples" />
+    <MESSAGE value="fix build" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix build" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
