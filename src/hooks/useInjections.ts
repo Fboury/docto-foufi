@@ -118,14 +118,6 @@ export const useInjections = () => {
     };
   });
 
-  // 2. Calcul de la zone recommandée (tri sur une copie séparée pour ne pas altérer l'ordre de la grille)
-  const sortedForRecommendation = [...zonesWithStats].sort((a, b) => {
-    if (a.daysAgo === null) return -1;
-    if (b.daysAgo === null) return 1;
-    return b.daysAgo - a.daysAgo;
-  });
-
-  const recommendedZone = sortedForRecommendation[0]?.id || 'ventre_gauche';
 
   const getRecommendedZone = (): InjectionZone => {
     if (injections.length === 0) return 'flanc_gauche';
@@ -135,15 +127,41 @@ export const useInjections = () => {
     return sorted[0].id;
   };
 
+  const updateInjection = async (
+    id: string,
+    updatedData: {
+      zone: InjectionZone;
+      injected_at: string;
+      notes?: string;
+      reaction_types?: ReactionType[];
+      reaction_details?: string;
+    }
+  ) => {
+    // On construit l'objet payload en mappant 'notes' sur 'reaction_details' si nécessaire
+    const payload: Record<string, any> = {
+      zone: updatedData.zone,
+      injected_at: updatedData.injected_at,
+      reaction_types: updatedData.reaction_types,
+      reaction_details: updatedData.reaction_details || updatedData.notes || null
+    };
+
+    const { error } = await supabase.from('injections').update(payload).eq('id', id);
+
+    if (!error) {
+      await fetchInjections(); // Rafraîchit l'historique et les compteurs
+    }
+
+    return { error };
+  };
+
   return {
     injections,
     loading,
     addInjectionWithPreviousReaction,
     deleteInjection,
     zonesWithStats,
+    updateInjection,
     recommendedZone: getRecommendedZone(),
     refetch: fetchInjections
   };
 };
-;
-;

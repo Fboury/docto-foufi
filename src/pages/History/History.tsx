@@ -2,12 +2,25 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, Calendar, Check, Filter, Trash2 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
-import { ReactionType, ZONES_CONFIG } from '../../types/injection';
+import {
+  InjectionEntry,
+  ReactionType,
+  ZONES_CONFIG
+} from '../../types/injection';
 import { formatDate, formatTime } from '../../utils/dateUtils';
+import { EditInjectionModal } from './components/EditInjectionModal';
 
 export const History: React.FC = () => {
   const navigate = useNavigate();
-  const { injections, deleteInjection, loading } = useInjections();
+  const {
+    injections,
+    deleteInjection,
+    updateInjection,
+    loading
+  } = useInjections();
+
+  // État pour stocker l'injection en cours d'édition
+  const [editingInjection, setEditingInjection] = useState<InjectionEntry | null>(null);
 
   // Tableau pour stocker les filtres sélectionnés en multi-sélection
   const [selectedFilters, setSelectedFilters] = useState<ReactionType[]>([]);
@@ -39,7 +52,7 @@ export const History: React.FC = () => {
     });
   };
 
-  // Filtrage : affiche l'injection si au moins une de ses réactions match avec les filtres actifs
+  // Filtrage
   const filteredInjections = injections.filter(item => {
     if (selectedFilters.length === 0) return true;
     const itemReactions = getItemReactions(item);
@@ -104,7 +117,7 @@ export const History: React.FC = () => {
         </div>
       </div>
 
-      {/* Filtres par Réaction (Multi-sélection) */}
+      {/* Filtres par Réaction */}
       <div className="space-y-2">
         <div
           className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
@@ -169,7 +182,8 @@ export const History: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-4 shadow-sm transition-all hover:border-[#D3C1E5]">
+                onClick={() => setEditingInjection(item)}
+                className="cursor-pointer space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-4 shadow-sm transition-all hover:border-[#5E4B8B] hover:shadow-md">
                 {/* Ligne Supérieure : Date & Zone */}
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
@@ -189,10 +203,11 @@ export const History: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Bouton de suppression */}
+                  {/* Bouton de suppression directe (stopPropagation empêche d'ouvrir la modale) */}
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={e => {
+                      e.stopPropagation();
                       if (item.id && confirm('Supprimer cette entrée ?')) {
                         deleteInjection(item.id);
                       }
@@ -230,6 +245,16 @@ export const History: React.FC = () => {
             );
           })}
         </div>
+      )}
+
+      {/* Modale d'Édition */}
+      {editingInjection && (
+        <EditInjectionModal
+          injection={editingInjection}
+          onClose={() => setEditingInjection(null)}
+          onSave={updateInjection}
+          onDelete={deleteInjection}
+        />
       )}
     </div>
   );

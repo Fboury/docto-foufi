@@ -25,8 +25,6 @@ export const Dashboard: React.FC = () => {
   const { zonesWithStats, injections, loading } = useInjections();
   const { reservedZoneIds } = usePlannedInjections();
 
-  // On sélectionne la première zone non réservée dans le classement officiel
-  const availableZones = zonesWithStats.filter(z => !reservedZoneIds.includes(z.id));
   // Trouver la zone recommandée non réservée
   const recommendedZoneData =
     [...zonesWithStats]
