@@ -141,7 +141,7 @@ export const AddInjection: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const exactIsoString = `${injectionDate}:00.000Z`;
+      const exactIsoString = new Date(injectionDate).toISOString();
       const beforeKeys = getUnlockedKeys(injections);
 
       await addInjectionWithPreviousReaction(

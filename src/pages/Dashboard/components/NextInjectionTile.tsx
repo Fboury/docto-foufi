@@ -9,6 +9,7 @@ interface NextInjectionTileProps {
 export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInjection }) => {
   const [now, setNow] = useState(new Date());
 
+  // Mise à jour du temps chaque minute
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
@@ -18,23 +19,20 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
     return null;
   }
 
-  // Timestamp UTC réel
+  // Parse direct du timestamp ISO (reconnait automatiquement l'UTC et le convertit en local)
   const lastTime = new Date(lastInjection.injected_at).getTime();
-
-  // Timestamp UTC réel (SANS appliquer de offset artificiel !)
   const currentTime = now.getTime();
 
-  // Fenêtres de 23h et 24h
+  // Fenêtres cibles (23h et 24h après la dernière piqûre)
   const targetMinTime = lastTime + 23 * 60 * 60 * 1000;
   const targetMaxTime = lastTime + 24 * 60 * 60 * 1000;
 
-  // Formatage des heures recommandées en UTC strict
+  // Formatage dans le fuseau horaire local de l'utilisateur
   const formatTime = (timestamp: number) => {
     return new Date(timestamp)
       .toLocaleTimeString('fr-FR', {
         hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'UTC'
+        minute: '2-digit'
       })
       .replace(':', 'h');
   };
@@ -42,42 +40,58 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
   const minTimeString = formatTime(targetMinTime);
   const maxTimeString = formatTime(targetMaxTime);
 
-  // Temps réel écoulé
-  const elapsedMs = currentTime - lastTime;
+  // Temps réel écoulé depuis la dernière injection
+  const elapsedMs = Math.max(0, currentTime - lastTime);
   const elapsedHours = Math.floor(elapsedMs / (1000 * 60 * 60));
   const elapsedMinutes = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60));
 
-  // Détermination de l'état
+  // Détermination du statut et du badge
   let status: 'ok' | 'due' | 'overdue' = 'ok';
   let statusText = '';
   let badgeBg = '';
   let badgeText = '';
 
   if (elapsedMs < 23 * 60 * 60 * 1000) {
-    // Avant 23h
     status = 'ok';
-    const remainingMs = targetMinTime - currentTime;
+    const remainingMs = Math.max(0, targetMinTime - currentTime);
     const remHours = Math.floor(remainingMs / (1000 * 60 * 60));
     const remMins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
-    statusText = `Dans environ ${remHours > 0 ? `${remHours}h ` : ''}${remMins} min`;
+
+    if (remHours > 0) {
+      statusText = `Dans environ ${remHours}h${remMins > 0 ? ` ${remMins}m` : ''}`;
+    } else {
+      statusText = `Dans environ ${remMins} min`;
+    }
+
     badgeBg = 'bg-[#F5EFE6]';
     badgeText = 'text-[#5E4B8B]';
   } else if (elapsedMs <= 24 * 60 * 60 * 1000) {
-    // Fenêtre idéale 23h - 24h
     status = 'due';
     statusText = 'C\'est l\'heure recommandée !';
     badgeBg = 'bg-amber-100';
     badgeText = 'text-amber-800';
   } else {
-    // Plus de 24h
     status = 'overdue';
     const overMs = currentTime - targetMaxTime;
     const overHours = Math.floor(overMs / (1000 * 60 * 60));
     const overMins = Math.floor((overMs % (1000 * 60 * 60)) / (1000 * 60));
-    statusText = `Dépassé de ${overHours > 0 ? `${overHours}h ` : ''}${overMins} min`;
+
+    if (overHours > 0) {
+      statusText = `Dépassé de ${overHours}h${overMins > 0 ? ` ${overMins}m` : ''}`;
+    } else {
+      statusText = `Dépassé de ${overMins} min`;
+    }
+
     badgeBg = 'bg-rose-100';
     badgeText = 'text-rose-800';
   }
+
+  // Libellé clair pour la dernière piqûre
+  const formatElapsed = () => {
+    if (elapsedHours === 0 && elapsedMinutes === 0) return 'À l\'instant';
+    if (elapsedHours === 0) return `Il y a ${elapsedMinutes} min`;
+    return `Il y a ${elapsedHours}h${elapsedMinutes > 0 ? ` ${elapsedMinutes}m` : ''}`;
+  };
 
   return (
     <div
@@ -95,7 +109,7 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
         </span>
       </div>
 
-      {/* Heure cible estimée */}
+      {/* Heure cible estimée en heure locale */}
       <div className="flex items-baseline justify-between pt-1">
         <div>
           <p className="text-2xl font-bold text-[#5E4B8B]">
@@ -128,9 +142,7 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
       <div
         className="flex items-center justify-between border-t border-[#F5EFE6] pt-2 text-[11px] text-[#8E8294]">
         <span>Dernière piqûre :</span>
-        <span className="font-semibold text-[#2D283E]">
-          Il y a {elapsedHours}h{elapsedMinutes > 0 ? `${elapsedMinutes}m` : ''}
-        </span>
+        <span className="font-semibold text-[#2D283E]">{formatElapsed()}</span>
       </div>
     </div>
   );

@@ -94,6 +94,7 @@ export const useInjections = () => {
     }
   };
 
+  // 1. Grille conservant l'ordre exact défini dans ZONES_CONFIG
   const zonesWithStats: ZoneData[] = ZONES_CONFIG.map(zone => {
     const lastInjection = injections.find(item => item.zone === zone.id);
 
@@ -101,9 +102,14 @@ export const useInjections = () => {
       return { ...zone, daysAgo: null, isRecent: false };
     }
 
-    const lastDate = new Date(lastInjection.injected_at).getTime();
-    const now = new Date().getTime();
-    const diffDays = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
+    const injDate = new Date(lastInjection.injected_at);
+    const now = new Date();
+
+    // Normalisation UTC à minuit pour un calcul de jours exact
+    const utcInj = Date.UTC(injDate.getUTCFullYear(), injDate.getUTCMonth(), injDate.getUTCDate());
+    const utcNow = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+
+    const diffDays = Math.max(0, Math.floor((utcNow - utcInj) / (1000 * 60 * 60 * 24)));
 
     return {
       ...zone,
@@ -111,6 +117,15 @@ export const useInjections = () => {
       isRecent: diffDays <= 6
     };
   });
+
+  // 2. Calcul de la zone recommandée (tri sur une copie séparée pour ne pas altérer l'ordre de la grille)
+  const sortedForRecommendation = [...zonesWithStats].sort((a, b) => {
+    if (a.daysAgo === null) return -1;
+    if (b.daysAgo === null) return 1;
+    return b.daysAgo - a.daysAgo;
+  });
+
+  const recommendedZone = sortedForRecommendation[0]?.id || 'ventre_gauche';
 
   const getRecommendedZone = (): InjectionZone => {
     if (injections.length === 0) return 'flanc_gauche';
@@ -130,4 +145,5 @@ export const useInjections = () => {
     refetch: fetchInjections
   };
 };
+;
 ;
