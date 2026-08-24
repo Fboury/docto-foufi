@@ -9,7 +9,6 @@ interface NextInjectionTileProps {
 export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInjection }) => {
   const [now, setNow] = useState(new Date());
 
-  // Mise à jour du temps chaque minute pour garder le décompte précis
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
@@ -19,17 +18,17 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
     return null;
   }
 
-  // Parse de la date Supabase en UTC pur
+  // Timestamp UTC réel
   const lastTime = new Date(lastInjection.injected_at).getTime();
 
-  // Temps actuel ajusté en UTC pour éviter tout décalage avec la date Supabase
-  const currentTime = now.getTime() - now.getTimezoneOffset() * 60000;
+  // Timestamp UTC réel (SANS appliquer de offset artificiel !)
+  const currentTime = now.getTime();
 
-  // Calcul des fenêtres de 23h et 24h en ms
-  const targetMinTime = lastTime + 23 * 60 * 60 * 1000; // 23h
-  const targetMaxTime = lastTime + 24 * 60 * 60 * 1000; // 24h
+  // Fenêtres de 23h et 24h
+  const targetMinTime = lastTime + 23 * 60 * 60 * 1000;
+  const targetMaxTime = lastTime + 24 * 60 * 60 * 1000;
 
-  // Formatage des heures recommandées en UTC strict (ex: "19h30 - 20h30")
+  // Formatage des heures recommandées en UTC strict
   const formatTime = (timestamp: number) => {
     return new Date(timestamp)
       .toLocaleTimeString('fr-FR', {
@@ -43,7 +42,7 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
   const minTimeString = formatTime(targetMinTime);
   const maxTimeString = formatTime(targetMaxTime);
 
-  // Temps écoulé depuis la dernière injection
+  // Temps réel écoulé
   const elapsedMs = currentTime - lastTime;
   const elapsedHours = Math.floor(elapsedMs / (1000 * 60 * 60));
   const elapsedMinutes = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -54,8 +53,8 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
   let badgeBg = '';
   let badgeText = '';
 
-  if (elapsedMs < 21 * 60 * 60 * 1000) {
-    // Plus de 2h avant la fenêtre
+  if (elapsedMs < 23 * 60 * 60 * 1000) {
+    // Avant 23h
     status = 'ok';
     const remainingMs = targetMinTime - currentTime;
     const remHours = Math.floor(remainingMs / (1000 * 60 * 60));
@@ -64,7 +63,7 @@ export const NextInjectionTile: React.FC<NextInjectionTileProps> = ({ lastInject
     badgeBg = 'bg-[#F5EFE6]';
     badgeText = 'text-[#5E4B8B]';
   } else if (elapsedMs <= 24 * 60 * 60 * 1000) {
-    // Dans la fenêtre de 23h-24h
+    // Fenêtre idéale 23h - 24h
     status = 'due';
     statusText = 'C\'est l\'heure recommandée !';
     badgeBg = 'bg-amber-100';

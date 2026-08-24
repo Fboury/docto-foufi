@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix build">
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="ajout de médocs">
+      <change afterPath="$PROJECT_DIR$/src/hooks/usePlannedInjections.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/PlanningWidgetTile.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useOrders.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useOrders.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useStocks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useStocks.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.tmp/tsconfig.app.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.tmp/tsconfig.app.tsbuildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/NextInjectionTile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,14 +154,6 @@
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
       <workItem from="1787078996709" duration="19470000" />
-    </task>
-    <task id="LOCAL-00024" summary="fix">
-      <option name="closed" value="true" />
-      <created>1776104827966</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1776104827966</updated>
     </task>
     <task id="LOCAL-00025" summary="only stats from past">
       <option name="closed" value="true" />
@@ -544,7 +539,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787509657798</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="ajout de médocs">
+      <option name="closed" value="true" />
+      <created>1787581863180</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1787581863181</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -556,7 +559,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ajustem" />
     <MESSAGE value="ajustements" />
     <MESSAGE value="ajout de plusieurs jours autre que 3" />
     <MESSAGE value="Ajout consultation programme" />
@@ -581,7 +583,8 @@
     <MESSAGE value="Ajout des stocks" />
     <MESSAGE value="badges multiples" />
     <MESSAGE value="fix build" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix build" />
+    <MESSAGE value="ajout de médocs" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajout de médocs" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

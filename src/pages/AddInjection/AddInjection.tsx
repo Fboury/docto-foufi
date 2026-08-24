@@ -6,10 +6,12 @@ import {
   CheckCircle2,
   Clock,
   Loader2,
+  Lock,
   Sparkles
 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
 import { useStocks } from '../../hooks/useStocks';
+import { usePlannedInjections } from '../../hooks/usePlannedInjections';
 import { InjectionZone, ReactionType } from '../../types/injection';
 import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
 import {
@@ -82,12 +84,24 @@ export const AddInjection: React.FC = () => {
     injections,
     recommendedZone,
     zonesWithStats,
-    loading,
+    loading: loadingInjections,
     addInjectionWithPreviousReaction
   } = useInjections();
   const { decrementStockForInjection } = useStocks();
 
-  const [selectedZone, setSelectedZone] = useState<InjectionZone>(recommendedZone);
+  // Récupération des zones actuellement réservées dans le futur
+  const {
+    reservedZoneIds,
+    plannedInjections,
+    loading: loadingPlanned
+  } = usePlannedInjections();
+
+  // Filtrer pour trouver la vraie meilleure zone disponible (non réservée)
+  const effectiveRecommendedZone = reservedZoneIds.includes(recommendedZone)
+    ? zonesWithStats.find(z => !reservedZoneIds.includes(z.id))?.id || recommendedZone
+    : recommendedZone;
+
+  const [selectedZone, setSelectedZone] = useState<InjectionZone>(effectiveRecommendedZone);
   const [selectedReactions, setSelectedReactions] = useState<ReactionType[]>([]);
   const [reactionDetails, setReactionDetails] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -96,10 +110,10 @@ export const AddInjection: React.FC = () => {
   const [newlyUnlocked, setNewlyUnlocked] = useState<BadgeConfig[]>([]);
 
   useEffect(() => {
-    if (recommendedZone) {
-      setSelectedZone(recommendedZone);
+    if (effectiveRecommendedZone) {
+      setSelectedZone(effectiveRecommendedZone);
     }
-  }, [recommendedZone]);
+  }, [effectiveRecommendedZone]);
 
   const [injectionDate, setInjectionDate] = useState(() => {
     const now = new Date();
@@ -165,9 +179,9 @@ export const AddInjection: React.FC = () => {
   };
 
   const selectedZoneData = zonesWithStats.find(z => z.id === selectedZone);
-  const recommendedZoneData = zonesWithStats.find(z => z.id === recommendedZone);
+  const recommendedZoneData = zonesWithStats.find(z => z.id === effectiveRecommendedZone);
 
-  if (loading) {
+  if (loadingInjections || loadingPlanned) {
     return (
       <div
         className="flex min-h-[50vh] flex-col items-center justify-center text-[#5E4B8B]">
@@ -232,7 +246,7 @@ export const AddInjection: React.FC = () => {
             </div>
             <span
               className="rounded-full bg-white/60 px-2 py-0.5 text-[10px] font-bold text-[#5E4B8B]">
-              Plus ancienne
+              Plus ancienne dispo
             </span>
           </div>
 
@@ -248,10 +262,10 @@ export const AddInjection: React.FC = () => {
               </p>
             </div>
 
-            {selectedZone !== recommendedZone && (
+            {selectedZone !== effectiveRecommendedZone && (
               <button
                 type="button"
-                onClick={() => setSelectedZone(recommendedZone)}
+                onClick={() => setSelectedZone(effectiveRecommendedZone)}
                 className="rounded-2xl bg-[#5E4B8B] px-3.5 py-2 text-xs font-bold text-white shadow hover:bg-[#4A3B6E]">
                 Sélectionner
               </button>
@@ -259,7 +273,7 @@ export const AddInjection: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Grille des zones */}
+        {/* 3. Grille des zones avec statut de réservation */}
         <div className="space-y-2.5">
           <label
             className="px-1 text-xs font-bold tracking-wider text-[#8E8294] uppercase">Sélectionner
@@ -268,26 +282,46 @@ export const AddInjection: React.FC = () => {
           <div className="grid grid-cols-3 gap-2.5">
             {zonesWithStats.map(zone => {
               const isSelected = selectedZone === zone.id;
+              const isReserved = reservedZoneIds.includes(zone.id);
+              const reservation = plannedInjections.find(p => p.zone === zone.id);
 
               return (
                 <button
                   key={zone.id}
                   type="button"
-                  onClick={() => setSelectedZone(zone.id)}
+                  disabled={isReserved}
+                  onClick={() => !isReserved && setSelectedZone(zone.id)}
                   className={`relative flex h-24 flex-col items-center justify-center rounded-2xl p-2 text-center transition-all ${
-                    isSelected
-                      ? 'font-bold shadow-md ring-2 ring-[#5E4B8B] ring-offset-2 ring-offset-[#F5EFE6]'
-                      : 'hover:opacity-95'
+                    isReserved
+                      ? 'cursor-not-allowed border border-dashed border-amber-300 bg-amber-50/70 text-amber-800 opacity-75'
+                      : isSelected
+                        ? 'font-bold shadow-md ring-2 ring-[#5E4B8B] ring-offset-2 ring-offset-[#F5EFE6]'
+                        : 'hover:opacity-95'
                   } ${
-                    !zone.isRecent
+                    !isReserved && !zone.isRecent
                       ? 'border border-[#D3C1E5] bg-[#E5D9F2] text-[#5E4B8B]'
-                      : 'border border-[#DFC8A6] bg-[#EFE3C8] text-[#8C6D46]'
+                      : !isReserved
+                        ? 'border border-[#DFC8A6] bg-[#EFE3C8] text-[#8C6D46]'
+                        : ''
                   } `}>
+                  {/* Badge de verrouillage si réservée */}
+                  {isReserved && (
+                    <span
+                      className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-200/90 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-900">
+                      <Lock className="h-2.5 w-2.5" /> Bloquée
+                    </span>
+                  )}
+
                   <span className="mb-0.5 text-xl">{zone.emoji}</span>
                   <span
                     className="text-xs leading-tight font-semibold">{zone.shortLabel}</span>
+
                   <span className="mt-0.5 text-[10px] font-medium opacity-75">
-                    {zone.daysAgo === null ? 'Jamais' : `il y a ${zone.daysAgo} j`}
+                    {isReserved
+                      ? reservation?.note || 'Réservée'
+                      : zone.daysAgo === null
+                        ? 'Jamais'
+                        : `il y a ${zone.daysAgo} j`}
                   </span>
                 </button>
               );

@@ -15,6 +15,7 @@ import {
   Sparkles,
   Syringe
 } from 'lucide-react';
+import { PlanningWidgetTile } from './components/PlanningWidgetTile';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -121,6 +122,7 @@ export const Dashboard: React.FC = () => {
           )}
           <OrderAlertTile />
           <StockWidgetTile />
+          <PlanningWidgetTile />
         </>
       )}
     </div>
