@@ -89,16 +89,42 @@ export const AddInjection: React.FC = () => {
   } = useInjections();
   const { decrementStockForInjection } = useStocks();
 
-  // Récupération des zones actuellement réservées dans le futur
-  const {
-    reservedZoneIds,
-    plannedInjections,
-    loading: loadingPlanned
-  } = usePlannedInjections();
+  // Récupération des injections planifiées
+  const { plannedInjections, loading: loadingPlanned } = usePlannedInjections();
 
-  // Filtrer pour trouver la vraie meilleure zone disponible (non réservée)
-  const effectiveRecommendedZone = reservedZoneIds.includes(recommendedZone)
-    ? zonesWithStats.find(z => !reservedZoneIds.includes(z.id))?.id || recommendedZone
+  // Date d'aujourd'hui normalisée à minuit (heure locale)
+  const todayAtMidnight = new Date();
+  todayAtMidnight.setHours(0, 0, 0, 0);
+
+  // Helper pour normaliser les dates planifiées à minuit
+  const parsePlannedDate = (dateStr?: string) => {
+    if (!dateStr) return null;
+    const cleanStr = dateStr.trim();
+    const d = cleanStr.includes('T') ? new Date(cleanStr) : new Date(`${cleanStr.slice(0, 10)}T00:00:00`);
+    d.setHours(0, 0, 0, 0);
+    return isNaN(d.getTime()) ? null : d;
+  };
+
+  // Zones STRICTEMENT bloquées dans le futur (date strictement supérieure à aujourd'hui)
+  const strictlyFutureReservedZoneIds = plannedInjections
+    .filter(p => {
+      const pDate = parsePlannedDate(p.planned_date || (p as any).date);
+      return pDate && pDate.getTime() > todayAtMidnight.getTime();
+    })
+    .map(p => p.zone);
+
+  // Zones planifiées pour AUJOURD'HUI PILE
+  const todayPlannedZonesMap = plannedInjections.reduce<Record<string, string>>((acc, p) => {
+    const pDate = parsePlannedDate(p.planned_date || (p as any).date);
+    if (pDate && pDate.getTime() === todayAtMidnight.getTime()) {
+      acc[p.zone] = p.note || 'Prévue aujourd\'hui';
+    }
+    return acc;
+  }, {});
+
+  // Filtrer pour trouver la vraie meilleure zone disponible (non réservée dans le futur)
+  const effectiveRecommendedZone = strictlyFutureReservedZoneIds.includes(recommendedZone)
+    ? zonesWithStats.find(z => !strictlyFutureReservedZoneIds.includes(z.id))?.id || recommendedZone
     : recommendedZone;
 
   const [selectedZone, setSelectedZone] = useState<InjectionZone>(effectiveRecommendedZone);
@@ -282,33 +308,47 @@ export const AddInjection: React.FC = () => {
           <div className="grid grid-cols-3 gap-2.5">
             {zonesWithStats.map(zone => {
               const isSelected = selectedZone === zone.id;
-              const isReserved = reservedZoneIds.includes(zone.id);
+              const isFutureReserved = strictlyFutureReservedZoneIds.includes(zone.id);
+              const isTodayPlanned = Boolean(todayPlannedZonesMap[zone.id]);
               const reservation = plannedInjections.find(p => p.zone === zone.id);
+
+              // Détermination dynamique des styles de carte
+              let cardStyles = '';
+              if (isFutureReserved) {
+                cardStyles =
+                  'cursor-not-allowed border border-dashed border-amber-300 bg-amber-50/70 text-amber-800 opacity-75';
+              } else if (isSelected) {
+                cardStyles =
+                  'font-bold shadow-md ring-2 ring-[#5E4B8B] ring-offset-2 ring-offset-[#F5EFE6] bg-[#5E4B8B] text-white';
+              } else if (isTodayPlanned) {
+                // 🌟 MISE EN VALEUR AMBRE/DORÉE POUR LE JOUR J
+                cardStyles = 'border-2 border-amber-400 bg-amber-50 text-amber-950 font-bold shadow-sm animate-pulse';
+              } else if (!zone.isRecent) {
+                cardStyles = 'border border-[#D3C1E5] bg-[#E5D9F2] text-[#5E4B8B] hover:opacity-95';
+              } else {
+                cardStyles = 'border border-[#DFC8A6] bg-[#EFE3C8] text-[#8C6D46] hover:opacity-95';
+              }
 
               return (
                 <button
                   key={zone.id}
                   type="button"
-                  disabled={isReserved}
-                  onClick={() => !isReserved && setSelectedZone(zone.id)}
-                  className={`relative flex h-24 flex-col items-center justify-center rounded-2xl p-2 text-center transition-all ${
-                    isReserved
-                      ? 'cursor-not-allowed border border-dashed border-amber-300 bg-amber-50/70 text-amber-800 opacity-75'
-                      : isSelected
-                        ? 'font-bold shadow-md ring-2 ring-[#5E4B8B] ring-offset-2 ring-offset-[#F5EFE6]'
-                        : 'hover:opacity-95'
-                  } ${
-                    !isReserved && !zone.isRecent
-                      ? 'border border-[#D3C1E5] bg-[#E5D9F2] text-[#5E4B8B]'
-                      : !isReserved
-                        ? 'border border-[#DFC8A6] bg-[#EFE3C8] text-[#8C6D46]'
-                        : ''
-                  } `}>
-                  {/* Badge de verrouillage si réservée */}
-                  {isReserved && (
+                  disabled={isFutureReserved}
+                  onClick={() => !isFutureReserved && setSelectedZone(zone.id)}
+                  className={`relative flex h-24 flex-col items-center justify-center rounded-2xl p-2 text-center transition-all ${cardStyles}`}>
+                  {/* Badge "Bloquée" uniquement si réservée dans le FUTUR STRICT */}
+                  {isFutureReserved && (
                     <span
                       className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-200/90 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-900">
                       <Lock className="h-2.5 w-2.5" /> Bloquée
+                    </span>
+                  )}
+
+                  {/* Badge "Jour J" si planifiée aujourd'hui */}
+                  {isTodayPlanned && !isSelected && (
+                    <span
+                      className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-400 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-950 uppercase shadow-xs">
+                      <Sparkles className="h-2.5 w-2.5" /> Jour J
                     </span>
                   )}
 
@@ -316,12 +356,14 @@ export const AddInjection: React.FC = () => {
                   <span
                     className="text-xs leading-tight font-semibold">{zone.shortLabel}</span>
 
-                  <span className="mt-0.5 text-[10px] font-medium opacity-75">
-                    {isReserved
+                  <span className="mt-0.5 text-[10px] font-medium opacity-85">
+                    {isFutureReserved
                       ? reservation?.note || 'Réservée'
-                      : zone.daysAgo === null
-                        ? 'Jamais'
-                        : `il y a ${zone.daysAgo} j`}
+                      : isTodayPlanned
+                        ? 'Prévue aujourd\'hui'
+                        : zone.daysAgo === null
+                          ? 'Jamais'
+                          : `il y a ${zone.daysAgo} j`}
                   </span>
                 </button>
               );
@@ -361,7 +403,7 @@ export const AddInjection: React.FC = () => {
                     isActive
                       ? 'border-[#5E4B8B] bg-[#5E4B8B] text-white shadow-sm'
                       : 'border-[#E8DFD8] bg-[#F5EFE6] text-[#2D283E] hover:bg-[#E8DFD8]'
-                  } `}>
+                  }`}>
                   <span className="text-base">{item.emoji}</span>
                   <span>{item.label}</span>
                 </button>

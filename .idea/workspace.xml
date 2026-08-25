@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="modif injection">
-      <change afterPath="$PROJECT_DIR$/src/pages/Profile/components/InjectionCalendar.tsx" afterDir="false" />
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="ajout calendar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useInjections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useInjections.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useStocks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useStocks.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,14 +152,7 @@
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
       <workItem from="1787078996709" duration="19470000" />
-    </task>
-    <task id="LOCAL-00027" summary="fix weekly">
-      <option name="closed" value="true" />
-      <created>1776188435673</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1776188435673</updated>
+      <workItem from="1787680460388" duration="862000" />
     </task>
     <task id="LOCAL-00028" summary="refacto contxtt">
       <option name="closed" value="true" />
@@ -543,7 +538,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787598590651</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="ajout calendar">
+      <option name="closed" value="true" />
+      <created>1787599635866</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1787599635866</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +558,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajout consultation programme" />
     <MESSAGE value="fix enregistrement" />
     <MESSAGE value="fix routing" />
     <MESSAGE value="add seance type" />
@@ -580,7 +582,8 @@
     <MESSAGE value="ajout de médocs" />
     <MESSAGE value="fix: date d'injection" />
     <MESSAGE value="modif injection" />
-    <option name="LAST_COMMIT_MESSAGE" value="modif injection" />
+    <MESSAGE value="ajout calendar" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajout calendar" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

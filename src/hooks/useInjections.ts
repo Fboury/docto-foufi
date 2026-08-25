@@ -40,13 +40,13 @@ export const useInjections = () => {
     previousReactionDetails?: string
   ) => {
     try {
-      // 1. Trouver l'injection immédiatement précédente (la plus récente enregistrée)
+      // 1. Trouver l'injection immédiatement précédente
       const lastInjection =
         injections && injections.length > 0
           ? [...injections].sort((a, b) => new Date(b.injected_at).getTime() - new Date(a.injected_at).getTime())[0]
           : null;
 
-      // 2. Si une injection précédente existe et que des réactions ont été saisies, la mettre à jour
+      // 2. Mettre à jour les réactions de l'injection précédente le cas échéant
       if (lastInjection && lastInjection.id && previousReactionTypes.length > 0) {
         const { error: updateError } = await supabase
           .from('injections')
@@ -68,7 +68,7 @@ export const useInjections = () => {
           {
             zone,
             injected_at: injectedAt,
-            reaction_types: ['aucune'], // La nouvelle injection n'a pas encore de réaction
+            reaction_types: ['aucune'],
             reaction_details: null
           }
         ])
@@ -76,7 +76,20 @@ export const useInjections = () => {
 
       if (error) throw error;
 
-      // Recharger la liste pour synchroniser l'UI avec Supabase
+      // 4. DÉCRÉMENTATION GLOBALE DU STOCK (-1 pour TOUS les éléments)
+      const { data: currentStocks } = await supabase.from('stocks').select('id, quantity');
+
+      if (currentStocks && currentStocks.length > 0) {
+        for (const item of currentStocks) {
+          if (item.quantity > 0) {
+            await supabase
+              .from('stocks')
+              .update({ quantity: item.quantity - 1 })
+              .eq('id', item.id);
+          }
+        }
+      }
+
       await fetchInjections();
     } catch (err) {
       console.error('Erreur lors de la sauvegarde :', err);
@@ -86,15 +99,30 @@ export const useInjections = () => {
 
   const deleteInjection = async (id: string) => {
     try {
+      // 1. Réincrémentation automatique du stock (+1 pour TOUS les éléments)
+      const { data: currentStocks } = await supabase.from('stocks').select('id, quantity');
+
+      if (currentStocks && currentStocks.length > 0) {
+        for (const item of currentStocks) {
+          await supabase
+            .from('stocks')
+            .update({ quantity: item.quantity + 1 })
+            .eq('id', item.id);
+        }
+      }
+
+      // 2. Suppression de l'injection dans Supabase
       const { error } = await supabase.from('injections').delete().eq('id', id);
       if (error) throw error;
+
+      // 3. Mise à jour de l'état local
       setInjections(prev => prev.filter(item => item.id !== id));
     } catch (err) {
       console.error('Erreur lors de la suppression :', err);
     }
   };
 
-  // 1. Grille conservant l'ordre exact défini dans ZONES_CONFIG
+  // Grille conservant l'ordre exact défini dans ZONES_CONFIG
   const zonesWithStats: ZoneData[] = ZONES_CONFIG.map(zone => {
     const lastInjection = injections.find(item => item.zone === zone.id);
 
@@ -105,7 +133,6 @@ export const useInjections = () => {
     const injDate = new Date(lastInjection.injected_at);
     const now = new Date();
 
-    // Normalisation UTC à minuit pour un calcul de jours exact
     const utcInj = Date.UTC(injDate.getUTCFullYear(), injDate.getUTCMonth(), injDate.getUTCDate());
     const utcNow = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 
@@ -117,7 +144,6 @@ export const useInjections = () => {
       isRecent: diffDays <= 6
     };
   });
-
 
   const getRecommendedZone = (): InjectionZone => {
     if (injections.length === 0) return 'flanc_gauche';
@@ -137,7 +163,6 @@ export const useInjections = () => {
       reaction_details?: string;
     }
   ) => {
-    // On construit l'objet payload en mappant 'notes' sur 'reaction_details' si nécessaire
     const payload: Record<string, any> = {
       zone: updatedData.zone,
       injected_at: updatedData.injected_at,
@@ -148,7 +173,7 @@ export const useInjections = () => {
     const { error } = await supabase.from('injections').update(payload).eq('id', id);
 
     if (!error) {
-      await fetchInjections(); // Rafraîchit l'historique et les compteurs
+      await fetchInjections();
     }
 
     return { error };

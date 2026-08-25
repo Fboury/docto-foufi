@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router';
 import {
   AlertCircle,
   AlertTriangle,
+  ArrowDown,
   ArrowLeft,
   Minus,
   Package,
@@ -16,14 +17,41 @@ import { useOrders } from '../../hooks/useOrders';
 
 export const Stocks: React.FC = () => {
   const navigate = useNavigate();
+
+  // Références vers les deux sections de matériel
+  const injectionSectionRef = useRef<HTMLDivElement>(null);
+  const dailyMedsSectionRef = useRef<HTMLDivElement>(null);
+
   const {
     injectionStocks,
     dailyMedStocks,
+    lowStockCount,
     loading,
     updateQuantity,
-    restock
-  } = useStocks();
+    restock,
+    refillPharmacyMeds
+  } =
+    useStocks();
+
   const { nhcStats, pharmacyStats, updateOrder, dailyMedsStats } = useOrders();
+
+  // Détection d'où se situe le premier stock bas pour scroller au bon endroit
+  const scrollToLowStock = () => {
+    const hasLowInjection = injectionStocks.some(item => item.quantity <= item.min_threshold);
+    const hasLowDailyMed = dailyMedStocks.some(item => item.quantity <= item.min_threshold);
+
+    if (hasLowInjection && injectionSectionRef.current) {
+      injectionSectionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    } else if (hasLowDailyMed && dailyMedsSectionRef.current) {
+      dailyMedsSectionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
 
   if (loading) {
     return (
@@ -47,6 +75,34 @@ export const Stocks: React.FC = () => {
         <h1 className="font-serif text-2xl font-bold text-[#5E4B8B]">Stocks &
           Commandes</h1>
       </div>
+
+      {/* ⚠️ TUILE WARNING ALERTE STOCK BAS */}
+      {lowStockCount > 0 && (
+        <div
+          className="flex items-center justify-between rounded-3xl border border-amber-300 bg-amber-50 p-4 shadow-xs transition-all">
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-800">
+              <AlertTriangle className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xs font-extrabold text-amber-900">
+                {lowStockCount} {lowStockCount > 1 ? 'éléments' : 'élément'} en
+                stock bas !
+              </p>
+              <p className="text-[11px] font-medium text-amber-700">Seuil
+                d'alerte atteint.</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={scrollToLowStock}
+            className="flex shrink-0 items-center gap-1 rounded-2xl bg-amber-200/80 px-3 py-2 text-xs font-bold text-amber-900 transition-all hover:bg-amber-300 active:scale-95">
+            <span>Voir</span>
+            <ArrowDown className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* SECTION COMMANDES MENSUELLES */}
       <div className="space-y-2.5">
@@ -151,8 +207,11 @@ export const Stocks: React.FC = () => {
             </div>
             <button
               type="button"
-              onClick={() => {
-                if (confirm('Confirmer la commande des Comprimés aujourd\'hui ?')) updateOrder('daily_meds');
+              onClick={async () => {
+                if (confirm('Confirmer la réception de la pharmacie comprimés ? (+30 Kaleorid/Bilaska, +60 Spiro)')) {
+                  await updateOrder('daily_meds');
+                  await refillPharmacyMeds();
+                }
               }}
               className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[#5E4B8B] py-2 text-[11px] font-bold text-white transition-all hover:bg-[#4A3B70] active:scale-95">
               <RefreshCw className="h-3 w-3" /> <span>Renouveler</span>
@@ -162,7 +221,9 @@ export const Stocks: React.FC = () => {
       </div>
 
       {/* SECTION 1 : MATÉRIEL & INJECTIONS */}
-      <div className="space-y-3 pt-2">
+      <div
+        ref={injectionSectionRef}
+        className="space-y-3 pt-2">
         <div
           className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
           <Package className="h-3.5 w-3.5" />
@@ -174,7 +235,9 @@ export const Stocks: React.FC = () => {
           return (
             <div
               key={item.id}
-              className={`space-y-3 rounded-3xl border bg-white p-4.5 shadow-xs ${isLow ? 'border-amber-300 bg-amber-50/40' : 'border-[#E8DFD8]'}`}>
+              className={`space-y-3 rounded-3xl border bg-white p-4.5 shadow-xs transition-all ${
+                isLow ? 'border-amber-300 bg-amber-50/40' : 'border-[#E8DFD8]'
+              }`}>
               <div className="flex items-start justify-between">
                 <div className="space-y-0.5">
                   <span
@@ -228,7 +291,9 @@ export const Stocks: React.FC = () => {
       </div>
 
       {/* SECTION 2 : MÉDICAMENTS QUOTIDIENS */}
-      <div className="space-y-3 pt-4">
+      <div
+        ref={dailyMedsSectionRef}
+        className="space-y-3 pt-4">
         <div
           className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#8E8294] uppercase">
           <Pill className="h-3.5 w-3.5" />
@@ -237,10 +302,15 @@ export const Stocks: React.FC = () => {
 
         {dailyMedStocks.map(item => {
           const isLow = item.quantity <= item.min_threshold;
+          const isSpiro = item.name.toLowerCase().includes('spiro');
+          const defaultAmount = isSpiro ? 60 : 30;
+
           return (
             <div
               key={item.id}
-              className={`space-y-3 rounded-3xl border bg-white p-4.5 shadow-xs ${isLow ? 'border-amber-300 bg-amber-50/40' : 'border-[#E8DFD8]'}`}>
+              className={`space-y-3 rounded-3xl border bg-white p-4.5 shadow-xs transition-all ${
+                isLow ? 'border-amber-300 bg-amber-50/40' : 'border-[#E8DFD8]'
+              }`}>
               <div className="flex items-start justify-between">
                 <div className="space-y-0.5">
                   <span
@@ -282,9 +352,10 @@ export const Stocks: React.FC = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => restock(item.id, 30)}
+                    onClick={() => restock(item.id, defaultAmount)}
                     className="flex items-center gap-1 rounded-2xl bg-[#5E4B8B] px-3 py-2 text-xs font-bold text-white hover:bg-[#4A3B70]">
-                    <RefreshCw className="h-3 w-3" /> <span>+30</span>
+                    <RefreshCw className="h-3 w-3" />
+                    <span>+{defaultAmount}</span>
                   </button>
                 </div>
               </div>

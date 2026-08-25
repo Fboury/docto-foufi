@@ -17,10 +17,10 @@ export const useStocks = () => {
 
   const fetchStocks = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('stocks')
-      .select('*')
-      .order('name', { ascending: true });
+    const {
+      data,
+      error
+    } = await supabase.from('stocks').select('*').order('name', { ascending: true });
 
     if (!error && data) {
       setStocks(data);
@@ -33,34 +33,48 @@ export const useStocks = () => {
   }, []);
 
   const updateQuantity = async (id: string, delta: number) => {
-    const item = stocks.find((s) => s.id === id);
+    const item = stocks.find(s => s.id === id);
     if (!item) return;
 
     const newQty = Math.max(0, item.quantity + delta);
-    setStocks((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, quantity: newQty } : s))
-    );
+    setStocks(prev => prev.map(s => (s.id === id ? {
+      ...s,
+      quantity: newQty
+    } : s)));
 
     await supabase.from('stocks').update({ quantity: newQty }).eq('id', id);
   };
 
   const restock = async (id: string, amount: number) => {
-    updateQuantity(id, amount);
+    await updateQuantity(id, amount);
   };
 
-  // Décrémentation automatique uniquement pour le matériel lié à l'injection
-  const decrementStockForInjection = async () => {
-    for (const item of stocks) {
-      if (item.item_type === 'injection') {
-        await updateQuantity(item.id, -1);
+  // Réapprovisionnement automatique sur clic du bouton global "Renouveler" comprimés
+  const refillPharmacyMeds = async () => {
+    const dailyMeds = stocks.filter(s => s.item_type === 'daily_med');
+
+    for (const item of dailyMeds) {
+      const lowerName = item.name.toLowerCase();
+      let addedQuantity = 30; // Défaut (+30 pour Kaleorid, Bilaska...)
+
+      if (lowerName.includes('spiro')) {
+        addedQuantity = 60; // (+60 pour Spiro)
       }
+
+      await updateQuantity(item.id, addedQuantity);
     }
   };
 
-  const injectionStocks = stocks.filter((s) => s.item_type === 'injection');
-  const dailyMedStocks = stocks.filter((s) => s.item_type === 'daily_med');
+  // Décrémentation de -1 sur CHAQUE article lors d'une nouvelle injection
+  const decrementStockForInjection = async () => {
+    for (const item of stocks) {
+      await updateQuantity(item.id, -1);
+    }
+  };
 
-  const lowStockCount = stocks.filter((s) => s.quantity <= s.min_threshold).length;
+  const injectionStocks = stocks.filter(s => s.item_type === 'injection');
+  const dailyMedStocks = stocks.filter(s => s.item_type === 'daily_med');
+  const lowStockCount = stocks.filter(s => s.quantity <= s.min_threshold).length;
 
   return {
     stocks,
@@ -69,6 +83,7 @@ export const useStocks = () => {
     loading,
     updateQuantity,
     restock,
+    refillPharmacyMeds,
     decrementStockForInjection,
     lowStockCount,
     refetch: fetchStocks
