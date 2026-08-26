@@ -20,7 +20,7 @@ export const OrderAlertTile: React.FC = () => {
 
   return (
     <div
-      onClick={() => navigate('/profil')}
+      onClick={() => navigate('/stocks')}
       className={`group cursor-pointer space-y-3 rounded-3xl border p-4.5 shadow-sm transition-all hover:border-[#5E4B8B] ${
         isGlobalDue
           ? 'border-rose-200 bg-rose-50/50'
