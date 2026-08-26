@@ -63,8 +63,8 @@ export const Profile: React.FC = () => {
 
     // 2. Jalons par zone
     const zoneCounts: Record<string, number> = {};
-    const ZONE_STEPS = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250];
-
+    // Paliers de 10 en 10 jusqu'à 200
+    const ZONE_STEPS = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
     sortedInjectionsAsc.forEach(i => {
       if (i.zone) {
         zoneCounts[i.zone] = (zoneCounts[i.zone] || 0) + 1;
@@ -112,6 +112,7 @@ export const Profile: React.FC = () => {
 
     return { counts, allDates };
   };
+  ;
 
   if (loading) {
     return (

@@ -10,13 +10,15 @@ import { useOrders } from '../../../hooks/useOrders';
 
 export const OrderAlertTile: React.FC = () => {
   const navigate = useNavigate();
-  const { nhcStats, pharmacyStats, loading } = useOrders();
+  const { nhcStats, pharmacyStats, dailyMedsStats, loading } = useOrders();
 
   if (loading) return null;
 
-  // Détermination du niveau d'urgence global
-  const isGlobalWarning = nhcStats.isWarning || pharmacyStats.isWarning;
-  const isGlobalDue = nhcStats.isDue || pharmacyStats.isDue;
+  // Prise en compte de dailyMedsStats dans les alertes globales (avec fallback de sécurité)
+  const isPillsWarning = dailyMedsStats?.isWarning ?? false;
+  const isPillsDue = dailyMedsStats?.isDue ?? false;
+  const isGlobalWarning = nhcStats.isWarning || pharmacyStats.isWarning || isPillsWarning;
+  const isGlobalDue = nhcStats.isDue || pharmacyStats.isDue || isPillsDue;
 
   return (
     <div
@@ -52,9 +54,9 @@ export const OrderAlertTile: React.FC = () => {
         </div>
       </div>
 
-      {/* Résumé synthétique côte à côte */}
-      <div className="grid grid-cols-2 gap-2 pt-1">
-        {/* NHC */}
+      {/* Résumé synthétique sur 3 colonnes */}
+      <div className="grid grid-cols-3 gap-2 pt-1">
+        {/* 1. NHC */}
         <div
           className="flex items-center justify-between rounded-2xl border border-[#F5EFE6] bg-white/80 p-2.5">
           <div className="space-y-0.5">
@@ -70,7 +72,7 @@ export const OrderAlertTile: React.FC = () => {
             </span>
           ) : nhcStats.isWarning ? (
             <span
-              className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-extrabold text-amber-800">
+              className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-extrabold text-amber-800">
               J-{nhcStats.daysLeft}
             </span>
           ) : (
@@ -81,12 +83,12 @@ export const OrderAlertTile: React.FC = () => {
           )}
         </div>
 
-        {/* PHARMACIE */}
+        {/* 2. PHARMACIE (Injections) */}
         <div
           className="flex items-center justify-between rounded-2xl border border-[#F5EFE6] bg-white/80 p-2.5">
           <div className="space-y-0.5">
             <p
-              className="text-[10px] font-bold tracking-wider text-[#8E8294] uppercase">Pharmacie</p>
+              className="text-[10px] font-bold tracking-wider text-[#8E8294] uppercase">Pharma</p>
             <p
               className="text-xs font-bold text-[#2D283E]">{pharmacyStats.nextDateStr}</p>
           </div>
@@ -97,8 +99,35 @@ export const OrderAlertTile: React.FC = () => {
             </span>
           ) : pharmacyStats.isWarning ? (
             <span
-              className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-extrabold text-amber-800">
+              className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-extrabold text-amber-800">
               J-{pharmacyStats.daysLeft}
+            </span>
+          ) : (
+            <span
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+              <CheckCircle2 className="h-3.5 w-3.5" />
+            </span>
+          )}
+        </div>
+
+        {/* 3. COMPRIMÉS */}
+        <div
+          className="flex items-center justify-between rounded-2xl border border-[#F5EFE6] bg-white/80 p-2.5">
+          <div className="space-y-0.5">
+            <p
+              className="text-[10px] font-bold tracking-wider text-[#8E8294] uppercase">Comprimés</p>
+            <p
+              className="text-xs font-bold text-[#2D283E]">{dailyMedsStats?.nextDateStr ?? '—'}</p>
+          </div>
+          {dailyMedsStats?.isDue ? (
+            <span
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+              <AlertCircle className="h-3.5 w-3.5" />
+            </span>
+          ) : dailyMedsStats?.isWarning ? (
+            <span
+              className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-extrabold text-amber-800">
+              J-{dailyMedsStats.daysLeft}
             </span>
           ) : (
             <span

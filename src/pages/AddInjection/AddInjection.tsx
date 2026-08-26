@@ -73,7 +73,8 @@ export const getUnlockedKeys = (items: any[]): string[] => {
     if (i.zone) zoneCounts[i.zone] = (zoneCounts[i.zone] || 0) + 1;
   });
 
-  const ZONE_STEPS = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250];
+  // Paliers de 10 en 10 jusqu'à 200
+  const ZONE_STEPS = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
   ZONE_STEPS.forEach(step => {
     if (Object.values(zoneCounts).some(count => count >= step)) {
       keys.push(`zone_master_${step}`);
@@ -87,6 +88,7 @@ export const getUnlockedKeys = (items: any[]): string[] => {
 
   return Array.from(new Set(keys));
 };
+;
 
 export const AddInjection: React.FC = () => {
   const navigate = useNavigate();
@@ -201,7 +203,8 @@ export const AddInjection: React.FC = () => {
       // Si l'état 'injections' avait DÉJÀ la 25e injection, beforeKeys l'incluait à tort.
       // On vérifie spécifiquement si la zone sélectionnée vient d'atteindre un palier (25, 50, etc.)
       const zoneInjectionsCount = updatedInjections.filter(i => i.zone === selectedZone).length;
-      const ZONE_STEPS = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250];
+      // Paliers de 10 en 10 jusqu'à 200
+      const ZONE_STEPS = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
       const justHitZoneStep = ZONE_STEPS.includes(zoneInjectionsCount);
 
       const newlyUnlockedKeys = afterKeys.filter(k => {

@@ -88,12 +88,30 @@ export const ALL_BADGES: BadgeConfig[] = [
     emoji: '🌌'
   },
 
-  // --- JALONS PAR ZONE ---
+  // --- JALONS PAR ZONE (Tous les 10) ---
   {
-    key: 'zone_master_25',
-    title: 'Expert d’une Zone',
-    description: '25 injections dans la même zone',
+    key: 'zone_master_10',
+    title: 'Habitué d’une Zone',
+    description: '10 injections dans la même zone',
     emoji: '🎯'
+  },
+  {
+    key: 'zone_master_20',
+    title: 'Fidèle d’une Zone',
+    description: '20 injections dans la même zone',
+    emoji: '📌'
+  },
+  {
+    key: 'zone_master_30',
+    title: 'Expert d’une Zone',
+    description: '30 injections dans la même zone',
+    emoji: '🏅'
+  },
+  {
+    key: 'zone_master_40',
+    title: 'Pilier d’une Zone',
+    description: '40 injections dans la même zone',
+    emoji: '⚡'
   },
   {
     key: 'zone_master_50',
@@ -102,52 +120,94 @@ export const ALL_BADGES: BadgeConfig[] = [
     emoji: '👑'
   },
   {
-    key: 'zone_master_75',
-    title: 'Légende d’une Zone',
-    description: '75 injections dans la même zone',
-    emoji: '🔥'
+    key: 'zone_master_60',
+    title: 'Maître d’une Zone',
+    description: '60 injections dans la même zone',
+    emoji: '🔱'
   },
   {
-    key: 'zone_master_100',
+    key: 'zone_master_70',
     title: 'Inoxydable',
-    description: '100 injections dans la même zone',
+    description: '70 injections dans la même zone',
     emoji: '🛡️'
   },
   {
-    key: 'zone_master_125',
+    key: 'zone_master_80',
+    title: 'Légende d’une Zone',
+    description: '80 injections dans la même zone',
+    emoji: '🔥'
+  },
+  {
+    key: 'zone_master_90',
     title: 'Imperturbable',
-    description: '125 injections dans la même zone',
-    emoji: '⚡'
-  },
-  {
-    key: 'zone_master_150',
-    title: 'Invincible',
-    description: '150 injections dans la même zone',
-    emoji: '🦾'
-  },
-  {
-    key: 'zone_master_175',
-    title: 'Inoxydable II',
-    description: '175 injections dans la même zone',
+    description: '90 injections dans la même zone',
     emoji: '🔮'
   },
   {
-    key: 'zone_master_200',
-    title: 'Maître des Zones',
-    description: '200 injections dans la même zone',
-    emoji: '🌠'
+    key: 'zone_master_100',
+    title: 'Centurion de Zone',
+    description: '100 injections dans la même zone',
+    emoji: '💯'
   },
   {
-    key: 'zone_master_225',
-    title: 'Vétéran',
-    description: '225 injections dans la même zone',
+    key: 'zone_master_110',
+    title: 'Invincible',
+    description: '110 injections dans la même zone',
+    emoji: '🦾'
+  },
+  {
+    key: 'zone_master_120',
+    title: 'Inébranlable',
+    description: '120 injections dans la même zone',
+    emoji: '💎'
+  },
+  {
+    key: 'zone_master_130',
+    title: 'Vétéran de Zone',
+    description: '130 injections dans la même zone',
     emoji: '🎖️'
   },
   {
-    key: 'zone_master_250',
+    key: 'zone_master_140',
     title: 'Suprématie',
-    description: '250 injections dans la même zone',
-    emoji: '👑'
+    description: '140 injections dans la même zone',
+    emoji: '🌌'
+  },
+  {
+    key: 'zone_master_150',
+    title: 'Maître Suprême de Zone',
+    description: '150 injections dans la même zone',
+    emoji: '🌟'
+  },
+  {
+    key: 'zone_master_160',
+    title: 'Titan de Zone',
+    description: '160 injections dans la même zone',
+    emoji: '🏛️'
+  },
+  {
+    key: 'zone_master_170',
+    title: 'Inaltérable',
+    description: '170 injections dans la même zone',
+    emoji: '✨'
+  },
+  {
+    key: 'zone_master_180',
+    title: 'Seigneur de Zone',
+    description: '180 injections dans la même zone',
+    emoji: '⚜️'
+  },
+  {
+    key: 'zone_master_190',
+    title: 'Monolithe',
+    description: '190 injections dans la même zone',
+    emoji: '🗿'
+  },
+  {
+    key: 'zone_master_200',
+    title: 'Légende Absolue',
+    description: '200 injections dans la même zone !',
+    emoji: '🌠'
   },
 
   // --- HABITUDES & MOMENTS DE LA JOURNÉE ---
