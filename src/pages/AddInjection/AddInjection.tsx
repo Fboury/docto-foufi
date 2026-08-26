@@ -28,7 +28,6 @@ export const getSingleInjectionKeys = (entry: any): string[] => {
   const keys: string[] = [];
   const d = new Date(entry.injected_at);
 
-  // Lecture en heure locale (pas UTC) pour correspondre à la vraie journée/heure
   const month = d.getMonth() + 1;
   const day = d.getDate();
   const hour = d.getHours();
@@ -88,7 +87,6 @@ export const getUnlockedKeys = (items: any[]): string[] => {
 
   return Array.from(new Set(keys));
 };
-;
 
 export const AddInjection: React.FC = () => {
   const navigate = useNavigate();
@@ -174,10 +172,10 @@ export const AddInjection: React.FC = () => {
     try {
       const exactIsoString = new Date(injectionDate).toISOString();
 
-      // 1. Calcul des clés AVANT l'ajout (sur les injections existantes)
+      // 1. Clés débloquées AVANT la nouvelle injection
       const beforeKeys = getUnlockedKeys(injections);
 
-      // 2. Sauvegarde en base de données
+      // 2. Sauvegarde Supabase
       const createdInjection = await addInjectionWithPreviousReaction(
         selectedZone,
         exactIsoString,
@@ -192,31 +190,32 @@ export const AddInjection: React.FC = () => {
         reaction_types: selectedReactions
       };
 
-      // 3. Calcul des clés APRÈS l'ajout
-      // On s'assure d'ajouter la nouvelle entrée si elle n'y est pas encore
+      // 3. Reconstitution de l'historique mis à jour
       const hasNewEntry = injections.some(i => i.id === newEntry.id);
       const updatedInjections = hasNewEntry ? injections : [newEntry, ...injections];
 
       const afterKeys = getUnlockedKeys(updatedInjections);
 
-      // 4. Détection des badges
-      // Si l'état 'injections' avait DÉJÀ la 25e injection, beforeKeys l'incluait à tort.
-      // On vérifie spécifiquement si la zone sélectionnée vient d'atteindre un palier (25, 50, etc.)
+      // 4. Clés obtenues SPÉCIFIQUEMENT sur la nouvelle injection
+      const currentSingleKeys = getSingleInjectionKeys(newEntry);
+
+      // 5. Vérification du franchissement de palier de zone
       const zoneInjectionsCount = updatedInjections.filter(i => i.zone === selectedZone).length;
-      // Paliers de 10 en 10 jusqu'à 200
       const ZONE_STEPS = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
       const justHitZoneStep = ZONE_STEPS.includes(zoneInjectionsCount);
 
-      const newlyUnlockedKeys = afterKeys.filter(k => {
-        const isNew = !beforeKeys.includes(k);
-        // Forcer le déblocage si le palier de zone vient pile d'être atteint
-        const isCurrentZoneMaster = k === `zone_master_${zoneInjectionsCount}` && justHitZoneStep;
-        return isNew || isCurrentZoneMaster;
-      });
+      // 6. Combinaison des règles : Nouveaux badges + Répétables + Palier de zone direct
+      const newlyUnlockedKeys = Array.from(
+        new Set([
+          ...afterKeys.filter(k => !beforeKeys.includes(k)),
+          ...currentSingleKeys.filter(k => REPEATABLE_BADGE_KEYS.includes(k)),
+          ...(justHitZoneStep ? [`zone_master_${zoneInjectionsCount}`] : [])
+        ])
+      );
 
       if (newlyUnlockedKeys.length > 0) {
         const badgesToReward = ALL_BADGES.filter(b => newlyUnlockedKeys.includes(b.key));
-        setNewlyUnlocked(badgesToReward); // Affiche enfin la modale !
+        setNewlyUnlocked(badgesToReward);
       } else {
         navigate('/');
       }
@@ -227,6 +226,7 @@ export const AddInjection: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
   const selectedZoneData = zonesWithStats.find(z => z.id === selectedZone);
   const recommendedZoneData = zonesWithStats.find(z => z.id === effectiveRecommendedZone);
 
