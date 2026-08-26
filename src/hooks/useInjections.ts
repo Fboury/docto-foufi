@@ -61,8 +61,8 @@ export const useInjections = () => {
         }
       }
 
-      // 3. Insérer la NOUVELLE injection
-      const { error } = await supabase
+      // 3. Insérer la NOUVELLE injection et récupérer le résultat
+      const { data: insertedData, error } = await supabase
         .from('injections')
         .insert([
           {
@@ -91,6 +91,9 @@ export const useInjections = () => {
       }
 
       await fetchInjections();
+
+      // 5. Renvoyer la nouvelle injection créée pour la détection des badges dans AddInjection
+      return insertedData ? insertedData[0] : null;
     } catch (err) {
       console.error('Erreur lors de la sauvegarde :', err);
       throw err;

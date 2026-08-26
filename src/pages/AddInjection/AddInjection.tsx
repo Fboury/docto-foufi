@@ -10,7 +10,6 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
-import { useStocks } from '../../hooks/useStocks';
 import { usePlannedInjections } from '../../hooks/usePlannedInjections';
 import { InjectionZone, ReactionType } from '../../types/injection';
 import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
@@ -18,22 +17,57 @@ import {
   BadgeUnlockModal
 } from '../../components/BadgeUnlockModal/BadgeUnlockModal';
 
-// Helper de détection des clés de badges débloqués
+// Extraction automatique des clés de badges répétables depuis ALL_BADGES
+const REPEATABLE_BADGE_KEYS = ALL_BADGES.map(b => b.key).filter(
+  key => !key.startsWith('total_injections_') && !key.startsWith('zone_master_')
+);
+
+// Helper de détection des clés de badges débloqués sur UNE injection donnée
+export const getSingleInjectionKeys = (entry: any): string[] => {
+  if (!entry || !entry.injected_at) return [];
+  const keys: string[] = [];
+  const d = new Date(entry.injected_at);
+
+  // Lecture en heure locale (pas UTC) pour correspondre à la vraie journée/heure
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+  const hour = d.getHours();
+  const dayOfWeek = d.getDay();
+
+  if (hour >= 6 && hour < 9) keys.push('early_bird');
+  if (hour >= 22 || hour < 2) keys.push('night_owl');
+  if (dayOfWeek === 0 || dayOfWeek === 6) keys.push('weekend_warrior');
+
+  if (month === 2 && day === 14) keys.push('valentines_day');
+  if (month === 3 && day === 21) keys.push('spring_injection');
+  if (month === 6 && day === 21) keys.push('summer_vibes');
+  if (month === 9 && day === 21) keys.push('autumn_injection');
+  if (month === 12 && day === 25) keys.push('christmas_injection');
+  if (month === 1 && day === 1) keys.push('new_year_injection');
+  if (month === 10 && day === 31) keys.push('halloween_injection');
+
+  if (month === 11 && day === 21) keys.push('bahia_birthday_injection');
+  if (month === 7 && day === 4) keys.push('partner_birthday_injection');
+  if (month === 12 && day === 1) keys.push('couple_anniversary_injection');
+  if (month === 4 && day === 1) keys.push('pacs_anniversary_injection');
+  if (month === 8 && day === 1) keys.push('engagement_anniversary_injection');
+  if (month === 8 && day === 19) keys.push('test');
+
+  return keys;
+};
+
+// Helper global pour l'historique complet
 export const getUnlockedKeys = (items: any[]): string[] => {
   const keys: string[] = [];
   const total = items.length;
 
   if (total === 0) return keys;
 
-  // 1. Jalons globaux
   const GLOBAL_STEPS = [1, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
   GLOBAL_STEPS.forEach(step => {
-    if (total >= step) {
-      keys.push(`total_injections_${step}`);
-    }
+    if (total >= step) keys.push(`total_injections_${step}`);
   });
 
-  // 2. Jalons par zone
   const zoneCounts: Record<string, number> = {};
   items.forEach(i => {
     if (i.zone) zoneCounts[i.zone] = (zoneCounts[i.zone] || 0) + 1;
@@ -46,33 +80,9 @@ export const getUnlockedKeys = (items: any[]): string[] => {
     }
   });
 
-  // 3. Événements, Habitudes & Saisons
   items.forEach(i => {
-    if (!i.injected_at) return;
-    const d = new Date(i.injected_at);
-    const month = d.getUTCMonth() + 1;
-    const day = d.getUTCDate();
-    const hour = d.getUTCHours();
-    const dayOfWeek = d.getUTCDay();
-
-    if (hour >= 6 && hour < 9) keys.push('early_bird');
-    if (hour >= 22 || hour < 2) keys.push('night_owl');
-    if (dayOfWeek === 0 || dayOfWeek === 6) keys.push('weekend_warrior');
-
-    if (month === 2 && day === 14) keys.push('valentines_day');
-    if (month === 3 && day === 21) keys.push('spring_injection');
-    if (month === 6 && day === 21) keys.push('summer_vibes');
-    if (month === 9 && day === 21) keys.push('autumn_injection');
-    if (month === 12 && day === 25) keys.push('christmas_injection');
-    if (month === 1 && day === 1) keys.push('new_year_injection');
-    if (month === 10 && day === 31) keys.push('halloween_injection');
-
-    if (month === 11 && day === 21) keys.push('bahia_birthday_injection');
-    if (month === 7 && day === 4) keys.push('partner_birthday_injection');
-    if (month === 12 && day === 1) keys.push('couple_anniversary_injection');
-    if (month === 4 && day === 1) keys.push('pacs_anniversary_injection');
-    if (month === 8 && day === 1) keys.push('engagement_anniversary_injection');
-    if (month === 8 && day === 19) keys.push('test');
+    const singleKeys = getSingleInjectionKeys(i);
+    keys.push(...singleKeys);
   });
 
   return Array.from(new Set(keys));
@@ -87,16 +97,12 @@ export const AddInjection: React.FC = () => {
     loading: loadingInjections,
     addInjectionWithPreviousReaction
   } = useInjections();
-  const { decrementStockForInjection } = useStocks();
 
-  // Récupération des injections planifiées
   const { plannedInjections, loading: loadingPlanned } = usePlannedInjections();
 
-  // Date d'aujourd'hui normalisée à minuit (heure locale)
   const todayAtMidnight = new Date();
   todayAtMidnight.setHours(0, 0, 0, 0);
 
-  // Helper pour normaliser les dates planifiées à minuit
   const parsePlannedDate = (dateStr?: string) => {
     if (!dateStr) return null;
     const cleanStr = dateStr.trim();
@@ -105,7 +111,6 @@ export const AddInjection: React.FC = () => {
     return isNaN(d.getTime()) ? null : d;
   };
 
-  // Zones STRICTEMENT bloquées dans le futur (date strictement supérieure à aujourd'hui)
   const strictlyFutureReservedZoneIds = plannedInjections
     .filter(p => {
       const pDate = parsePlannedDate(p.planned_date || (p as any).date);
@@ -113,7 +118,6 @@ export const AddInjection: React.FC = () => {
     })
     .map(p => p.zone);
 
-  // Zones planifiées pour AUJOURD'HUI PILE
   const todayPlannedZonesMap = plannedInjections.reduce<Record<string, string>>((acc, p) => {
     const pDate = parsePlannedDate(p.planned_date || (p as any).date);
     if (pDate && pDate.getTime() === todayAtMidnight.getTime()) {
@@ -122,7 +126,6 @@ export const AddInjection: React.FC = () => {
     return acc;
   }, {});
 
-  // Filtrer pour trouver la vraie meilleure zone disponible (non réservée dans le futur)
   const effectiveRecommendedZone = strictlyFutureReservedZoneIds.includes(recommendedZone)
     ? zonesWithStats.find(z => !strictlyFutureReservedZoneIds.includes(z.id))?.id || recommendedZone
     : recommendedZone;
@@ -131,8 +134,6 @@ export const AddInjection: React.FC = () => {
   const [selectedReactions, setSelectedReactions] = useState<ReactionType[]>([]);
   const [reactionDetails, setReactionDetails] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Nouveaux badges débloqués lors du submit
   const [newlyUnlocked, setNewlyUnlocked] = useState<BadgeConfig[]>([]);
 
   useEffect(() => {
@@ -162,37 +163,57 @@ export const AddInjection: React.FC = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (isSubmitting) return;
+
     setIsSubmitting(true);
 
     try {
       const exactIsoString = new Date(injectionDate).toISOString();
+
+      // 1. Calcul des clés AVANT l'ajout (sur les injections existantes)
       const beforeKeys = getUnlockedKeys(injections);
 
-      await addInjectionWithPreviousReaction(
+      // 2. Sauvegarde en base de données
+      const createdInjection = await addInjectionWithPreviousReaction(
         selectedZone,
         exactIsoString,
         selectedReactions.length > 0 ? selectedReactions : ['aucune'],
         reactionDetails
       );
 
-      // Décrémentation automatique du stock
-      await decrementStockForInjection();
-
-      const newEntry = {
-        injected_at: exactIsoString,
+      const newEntry = createdInjection || {
+        id: `temp-${Date.now()}`,
         zone: selectedZone,
-        reaction_types: selectedReactions.length > 0 ? selectedReactions : ['aucune']
+        injected_at: exactIsoString,
+        reaction_types: selectedReactions
       };
 
-      const updatedInjections = [newEntry, ...injections];
+      // 3. Calcul des clés APRÈS l'ajout
+      // On s'assure d'ajouter la nouvelle entrée si elle n'y est pas encore
+      const hasNewEntry = injections.some(i => i.id === newEntry.id);
+      const updatedInjections = hasNewEntry ? injections : [newEntry, ...injections];
+
       const afterKeys = getUnlockedKeys(updatedInjections);
-      const newlyUnlockedKeys = afterKeys.filter(k => !beforeKeys.includes(k));
+
+      // 4. Détection des badges
+      // Si l'état 'injections' avait DÉJÀ la 25e injection, beforeKeys l'incluait à tort.
+      // On vérifie spécifiquement si la zone sélectionnée vient d'atteindre un palier (25, 50, etc.)
+      const zoneInjectionsCount = updatedInjections.filter(i => i.zone === selectedZone).length;
+      const ZONE_STEPS = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250];
+      const justHitZoneStep = ZONE_STEPS.includes(zoneInjectionsCount);
+
+      const newlyUnlockedKeys = afterKeys.filter(k => {
+        const isNew = !beforeKeys.includes(k);
+        // Forcer le déblocage si le palier de zone vient pile d'être atteint
+        const isCurrentZoneMaster = k === `zone_master_${zoneInjectionsCount}` && justHitZoneStep;
+        return isNew || isCurrentZoneMaster;
+      });
 
       if (newlyUnlockedKeys.length > 0) {
         const badgesToReward = ALL_BADGES.filter(b => newlyUnlockedKeys.includes(b.key));
-        setNewlyUnlocked(badgesToReward);
+        setNewlyUnlocked(badgesToReward); // Affiche enfin la modale !
       } else {
         navigate('/');
       }
@@ -203,7 +224,6 @@ export const AddInjection: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
   const selectedZoneData = zonesWithStats.find(z => z.id === selectedZone);
   const recommendedZoneData = zonesWithStats.find(z => z.id === effectiveRecommendedZone);
 
@@ -312,7 +332,6 @@ export const AddInjection: React.FC = () => {
               const isTodayPlanned = Boolean(todayPlannedZonesMap[zone.id]);
               const reservation = plannedInjections.find(p => p.zone === zone.id);
 
-              // Détermination dynamique des styles de carte
               let cardStyles = '';
               if (isFutureReserved) {
                 cardStyles =
@@ -321,7 +340,6 @@ export const AddInjection: React.FC = () => {
                 cardStyles =
                   'font-bold shadow-md ring-2 ring-[#5E4B8B] ring-offset-2 ring-offset-[#F5EFE6] bg-[#5E4B8B] text-white';
               } else if (isTodayPlanned) {
-                // 🌟 MISE EN VALEUR AMBRE/DORÉE POUR LE JOUR J
                 cardStyles = 'border-2 border-amber-400 bg-amber-50 text-amber-950 font-bold shadow-sm animate-pulse';
               } else if (!zone.isRecent) {
                 cardStyles = 'border border-[#D3C1E5] bg-[#E5D9F2] text-[#5E4B8B] hover:opacity-95';
@@ -336,7 +354,6 @@ export const AddInjection: React.FC = () => {
                   disabled={isFutureReserved}
                   onClick={() => !isFutureReserved && setSelectedZone(zone.id)}
                   className={`relative flex h-24 flex-col items-center justify-center rounded-2xl p-2 text-center transition-all ${cardStyles}`}>
-                  {/* Badge "Bloquée" uniquement si réservée dans le FUTUR STRICT */}
                   {isFutureReserved && (
                     <span
                       className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-200/90 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-900">
@@ -344,7 +361,6 @@ export const AddInjection: React.FC = () => {
                     </span>
                   )}
 
-                  {/* Badge "Jour J" si planifiée aujourd'hui */}
                   {isTodayPlanned && !isSelected && (
                     <span
                       className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-400 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-950 uppercase shadow-xs">
@@ -426,7 +442,8 @@ export const AddInjection: React.FC = () => {
 
         {/* 5. Validation */}
         <button
-          type="submit"
+          type="button"
+          onClick={() => handleSubmit()}
           disabled={isSubmitting}
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#5E4B8B] py-4 text-base font-bold text-white shadow-lg shadow-[#5E4B8B]/20 transition-all hover:bg-[#4A3B6E] active:scale-[0.99] disabled:opacity-50">
           {isSubmitting ? (

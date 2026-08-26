@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="ajout calendar">
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix redirection stock">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/useInjections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useInjections.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useStocks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useStocks.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,23 +150,7 @@
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
       <workItem from="1787078996709" duration="19470000" />
-      <workItem from="1787680460388" duration="862000" />
-    </task>
-    <task id="LOCAL-00028" summary="refacto contxtt">
-      <option name="closed" value="true" />
-      <created>1776275031417</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1776275031417</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Add completed">
-      <option name="closed" value="true" />
-      <created>1776279447749</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1776279447749</updated>
+      <workItem from="1787680460388" duration="3886000" />
     </task>
     <task id="LOCAL-00030" summary="goal detail">
       <option name="closed" value="true" />
@@ -546,7 +528,23 @@
       <option name="project" value="LOCAL" />
       <updated>1787599635866</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="some fixes">
+      <option name="closed" value="true" />
+      <created>1787681645902</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1787681645904</updated>
+    </task>
+    <task id="LOCAL-00078" summary="fix redirection stock">
+      <option name="closed" value="true" />
+      <created>1787734311943</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1787734311943</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -558,7 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix enregistrement" />
     <MESSAGE value="fix routing" />
     <MESSAGE value="add seance type" />
     <MESSAGE value="fix add workout" />
@@ -566,7 +563,6 @@
     <MESSAGE value="test" />
     <MESSAGE value="Ajout et historique" />
     <MESSAGE value="gitigbore" />
-    <MESSAGE value="some fixes" />
     <MESSAGE value="Ajout stats" />
     <MESSAGE value="more improvements" />
     <MESSAGE value="fix buidl" />
@@ -583,7 +579,9 @@
     <MESSAGE value="fix: date d'injection" />
     <MESSAGE value="modif injection" />
     <MESSAGE value="ajout calendar" />
-    <option name="LAST_COMMIT_MESSAGE" value="ajout calendar" />
+    <MESSAGE value="some fixes" />
+    <MESSAGE value="fix redirection stock" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix redirection stock" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
