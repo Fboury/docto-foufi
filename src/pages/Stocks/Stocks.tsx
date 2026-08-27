@@ -29,9 +29,10 @@ export const Stocks: React.FC = () => {
     loading,
     updateQuantity,
     restock,
-    refillPharmacyMeds
-  } =
-    useStocks();
+    refillPharmacyMeds,
+    refillInjectionPerf,
+    refillPharmacyPerf
+  } = useStocks();
 
   const { nhcStats, pharmacyStats, updateOrder, dailyMedsStats } = useOrders();
 
@@ -139,8 +140,12 @@ export const Stocks: React.FC = () => {
             </div>
             <button
               type="button"
-              onClick={() => {
-                if (confirm('Confirmer la commande NHC aujourd\'hui ?')) updateOrder('nhc');
+              onClick={async () => {
+                if (confirm('Confirmer la commande NHC aujourd\'hui ?')) {
+                  await updateOrder('nhc');
+                  await refillInjectionPerf();
+                }
+                ;
               }}
               className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[#5E4B8B] py-2 text-[11px] font-bold text-white transition-all hover:bg-[#4A3B70] active:scale-95">
               <RefreshCw className="h-3 w-3" /> <span>Renouveler</span>
@@ -173,8 +178,11 @@ export const Stocks: React.FC = () => {
             </div>
             <button
               type="button"
-              onClick={() => {
-                if (confirm('Confirmer la commande Pharmacie Perfusion aujourd\'hui ?')) updateOrder('pharmacy');
+              onClick={async () => {
+                if (confirm('Confirmer la commande Pharmacie Perfusion aujourd\'hui ?')) {
+                  await updateOrder('pharmacy');
+                  await refillPharmacyPerf();
+                }
               }}
               className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[#5E4B8B] py-2 text-[11px] font-bold text-white transition-all hover:bg-[#4A3B70] active:scale-95">
               <RefreshCw className="h-3 w-3" /> <span>Renouveler</span>

@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fiox commande">
-      <change beforePath="$PROJECT_DIR$/node_modules/.tmp/tsconfig.app.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.tmp/tsconfig.app.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix multibadge">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useStocks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useStocks.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,15 +150,7 @@
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
       <workItem from="1787078996709" duration="19470000" />
-      <workItem from="1787680460388" duration="4720000" />
-    </task>
-    <task id="LOCAL-00032" summary="Ajout de la modification de running">
-      <option name="closed" value="true" />
-      <created>1776684955821</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1776684955821</updated>
+      <workItem from="1787680460388" duration="6042000" />
     </task>
     <task id="LOCAL-00033" summary="fix units">
       <option name="closed" value="true" />
@@ -543,7 +536,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787737055042</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="fix multibadge">
+      <option name="closed" value="true" />
+      <created>1787737353120</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1787737353120</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix add workout" />
     <MESSAGE value="add envlocal" />
     <MESSAGE value="test" />
     <MESSAGE value="Ajout et historique" />
@@ -580,7 +580,8 @@
     <MESSAGE value="fix redirection stock" />
     <MESSAGE value="fix modale" />
     <MESSAGE value="fiox commande" />
-    <option name="LAST_COMMIT_MESSAGE" value="fiox commande" />
+    <MESSAGE value="fix multibadge" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix multibadge" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

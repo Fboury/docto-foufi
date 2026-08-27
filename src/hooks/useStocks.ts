@@ -8,7 +8,7 @@ export interface StockItem {
   quantity: number;
   min_threshold: number;
   unit: string;
-  item_type: 'injection' | 'daily_med';
+  item_type: 'injection' | 'daily_med' | 'injection_pharmacy';
 }
 
 export const useStocks = () => {
@@ -25,6 +25,7 @@ export const useStocks = () => {
     if (!error && data) {
       setStocks(data);
     }
+    console.log(stocks);
     setLoading(false);
   };
 
@@ -37,10 +38,16 @@ export const useStocks = () => {
     if (!item) return;
 
     const newQty = Math.max(0, item.quantity + delta);
-    setStocks(prev => prev.map(s => (s.id === id ? {
-      ...s,
-      quantity: newQty
-    } : s)));
+    setStocks(prev =>
+      prev.map(s =>
+        s.id === id
+          ? {
+            ...s,
+            quantity: newQty
+          }
+          : s
+      )
+    );
 
     await supabase.from('stocks').update({ quantity: newQty }).eq('id', id);
   };
@@ -65,6 +72,26 @@ export const useStocks = () => {
     }
   };
 
+  // Réapprovisionnement automatique sur clic du bouton global "Renouveler"
+  // perfusion
+  const refillPharmacyPerf = async () => {
+    const injectionPharmacyMeds = stocks.filter(s => s.item_type === 'injection_pharmacy');
+
+    for (const item of injectionPharmacyMeds) {
+      await updateQuantity(item.id, 30);
+    }
+  };
+
+  // Réapprovisionnement automatique sur clic du bouton global "Renouveler"
+  // perfusion
+  const refillInjectionPerf = async () => {
+    const injectionyMeds = stocks.filter(s => s.item_type === 'injection');
+
+    for (const item of injectionyMeds) {
+      await updateQuantity(item.id, 30);
+    }
+  };
+
   // Décrémentation de -1 sur CHAQUE article lors d'une nouvelle injection
   const decrementStockForInjection = async () => {
     for (const item of stocks) {
@@ -84,8 +111,12 @@ export const useStocks = () => {
     updateQuantity,
     restock,
     refillPharmacyMeds,
+    refillPharmacyPerf,
+    refillInjectionPerf,
     decrementStockForInjection,
     lowStockCount,
     refetch: fetchStocks
   };
 };
+;
+;
