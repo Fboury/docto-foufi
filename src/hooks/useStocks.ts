@@ -99,7 +99,7 @@ export const useStocks = () => {
     }
   };
 
-  const injectionStocks = stocks.filter(s => s.item_type === 'injection');
+  const injectionStocks = stocks.filter(s => s.item_type === 'injection' || s.item_type === 'injection_pharmacy');
   const dailyMedStocks = stocks.filter(s => s.item_type === 'daily_med');
   const lowStockCount = stocks.filter(s => s.quantity <= s.min_threshold).length;
 
