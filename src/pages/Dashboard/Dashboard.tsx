@@ -6,7 +6,9 @@ import { usePlannedInjections } from '../../hooks/usePlannedInjections';
 import { ZONES_CONFIG } from '../../types/injection';
 import { NextInjectionTile } from './components/NextInjectionTile';
 import { OrderAlertTile } from './components/OrderAlertTile';
+import { LevelCard } from './components/LevelCard';
 import { StockWidgetTile } from './components/StockWidgetTile';
+
 import {
   ChevronRight,
   Clock,
@@ -138,6 +140,7 @@ export const Dashboard: React.FC = () => {
             </div>
           )}
 
+          <LevelCard injections={injections} />
           <OrderAlertTile />
           <StockWidgetTile />
           <PlanningWidgetTile />

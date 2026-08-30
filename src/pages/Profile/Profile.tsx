@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, Award, Calendar, CheckCircle2, Lock } from 'lucide-react';
+import { ArrowLeft, Award, CheckCircle2, Lock, User, Zap } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
 import { usePlannedInjections } from '../../hooks/usePlannedInjections';
+import { calculateLevel } from '../../utils/levelingUtils';
 import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
 import { BadgeDetailModal } from './components/BadgeDetailModal';
 import { InjectionCalendar } from './components/InjectionCalendar';
@@ -15,6 +16,13 @@ export const Profile: React.FC = () => {
 
   const navigate = useNavigate();
   const { injections } = useInjections();
+  const {
+    level,
+    currentXP,
+    xpForNextLevel,
+    progressPercent,
+    title
+  } = calculateLevel(injections);
   const { plannedInjections } = usePlannedInjections();
   const PROFILE_DATA = {
     firstName: 'Bahia',
@@ -142,24 +150,45 @@ export const Profile: React.FC = () => {
       {/* TUILE DONNÉES FIXES */}
       <div
         className="space-y-4 rounded-3xl border border-[#E8DFD8] bg-white p-5 shadow-xs">
-        <div className="flex items-center gap-3 border-b border-[#F5EFE6] pb-3">
-          <div
-            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F5EFE6] text-xl font-bold text-[#5E4B8B]">
-            {PROFILE_DATA.firstName.charAt(0)}
-            {PROFILE_DATA.lastName.charAt(0)}
+        {/* Profil + Badge Niveau */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F5EFE6] text-[#5E4B8B]">
+              <User className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-[#2D283E]">
+                {PROFILE_DATA.firstName} {PROFILE_DATA.lastName}
+              </h2>
+              <p className="text-xs font-semibold text-[#5E4B8B]">{title}</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-base font-bold text-[#2D283E]">
-              {PROFILE_DATA.firstName} {PROFILE_DATA.lastName}
-            </h2>
-            <p className="text-xs text-[#8E8294]">Utilisatrice DoctoFoufi</p>
+
+          {/* Badge Niveau compact */}
+          <div
+            className="flex items-center gap-1.5 rounded-2xl border border-[#D3C1E5] bg-[#E5D9F2] px-3 py-1.5 text-[#5E4B8B]">
+            <Zap className="h-4 w-4 fill-amber-400 text-amber-500" />
+            <span className="text-xs font-extrabold">Niv. {level}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 text-xs text-[#2D283E]">
-          <Calendar className="h-4 w-4 text-[#5E4B8B]" />
-          <span
-            className="font-medium">Née le {PROFILE_DATA.displayBirthDate}</span>
+        {/* Mini barre de progression d'XP */}
+        <div
+          className="space-y-1.5 rounded-2xl border border-[#E8DFD8] bg-[#F5EFE6] p-3">
+          <div className="flex justify-between text-[10px] font-bold">
+            <span className="text-[#5E4B8B]">Niveau {level}</span>
+            <span className="text-[#8E8294]">
+              {currentXP} / {xpForNextLevel} XP
+            </span>
+          </div>
+
+          <div className="h-2 w-full overflow-hidden rounded-full bg-white">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[#8E72C3] to-[#5E4B8B] transition-all duration-500"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
         </div>
       </div>
       <InjectionCalendar

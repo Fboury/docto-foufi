@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix multibadge">
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix injection stocks">
+      <change afterPath="$PROJECT_DIR$/src/components/LevelUpModal/LevelUpModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/LevelCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/levelingUtils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useStocks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useStocks.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Stocks/Stocks.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,11 +113,11 @@
       <recent name="$PROJECT_DIR$/src/components" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/pages/Dashboard/components" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/pages/CreatePlan" />
       <recent name="$PROJECT_DIR$/src/pages/WorkoutDetails" />
       <recent name="$PROJECT_DIR$/src/pages/Dashboard" />
-      <recent name="$PROJECT_DIR$/src/pages/AddWorkout" />
     </key>
   </component>
   <component name="RunManager">
@@ -150,23 +155,8 @@
       <workItem from="1786990345604" duration="369000" />
       <workItem from="1786990785506" duration="5317000" />
       <workItem from="1787078996709" duration="19470000" />
-      <workItem from="1787680460388" duration="6042000" />
-    </task>
-    <task id="LOCAL-00033" summary="fix units">
-      <option name="closed" value="true" />
-      <created>1776685443544</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1776685443545</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Ajout gestion iscompleted et raceday">
-      <option name="closed" value="true" />
-      <created>1777191900507</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1777191900507</updated>
+      <workItem from="1787680460388" duration="6808000" />
+      <workItem from="1787925093283" duration="3285000" />
     </task>
     <task id="LOCAL-00035" summary="update ftp">
       <option name="closed" value="true" />
@@ -544,7 +534,23 @@
       <option name="project" value="LOCAL" />
       <updated>1787737353120</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="fix refill">
+      <option name="closed" value="true" />
+      <created>1787853844529</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1787853844529</updated>
+    </task>
+    <task id="LOCAL-00083" summary="fix injection stocks">
+      <option name="closed" value="true" />
+      <created>1787926258617</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1787926258617</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -556,8 +562,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add envlocal" />
-    <MESSAGE value="test" />
     <MESSAGE value="Ajout et historique" />
     <MESSAGE value="gitigbore" />
     <MESSAGE value="Ajout stats" />
@@ -581,7 +585,9 @@
     <MESSAGE value="fix modale" />
     <MESSAGE value="fiox commande" />
     <MESSAGE value="fix multibadge" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix multibadge" />
+    <MESSAGE value="fix refill" />
+    <MESSAGE value="fix injection stocks" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix injection stocks" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

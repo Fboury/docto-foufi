@@ -7,10 +7,12 @@ import {
   Clock,
   Loader2,
   Lock,
-  Sparkles
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
 import { usePlannedInjections } from '../../hooks/usePlannedInjections';
+import { calculateLevel } from '../../utils/levelingUtils';
 import { InjectionZone, ReactionType } from '../../types/injection';
 import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
 import {
@@ -58,7 +60,7 @@ export const getSingleInjectionKeys = (entry: any): string[] => {
 // Helper global pour l'historique complet
 export const getUnlockedKeys = (items: any[]): string[] => {
   const keys: string[] = [];
-  const total = items.length;
+  const total = items?.length || 0;
 
   if (total === 0) return keys;
 
@@ -72,7 +74,6 @@ export const getUnlockedKeys = (items: any[]): string[] => {
     if (i.zone) zoneCounts[i.zone] = (zoneCounts[i.zone] || 0) + 1;
   });
 
-  // Paliers de 10 en 10 jusqu'à 200
   const ZONE_STEPS = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
   ZONE_STEPS.forEach(step => {
     if (Object.values(zoneCounts).some(count => count >= step)) {
@@ -91,7 +92,7 @@ export const getUnlockedKeys = (items: any[]): string[] => {
 export const AddInjection: React.FC = () => {
   const navigate = useNavigate();
   const {
-    injections,
+    injections = [],
     recommendedZone,
     zonesWithStats,
     loading: loadingInjections,
@@ -136,6 +137,9 @@ export const AddInjection: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newlyUnlocked, setNewlyUnlocked] = useState<BadgeConfig[]>([]);
 
+  // Calcul sécurisé du niveau
+  const currentLevelInfo = calculateLevel(injections);
+
   useEffect(() => {
     if (effectiveRecommendedZone) {
       setSelectedZone(effectiveRecommendedZone);
@@ -172,10 +176,13 @@ export const AddInjection: React.FC = () => {
     try {
       const exactIsoString = new Date(injectionDate).toISOString();
 
-      // 1. Clés débloquées AVANT la nouvelle injection
+      // 1. Détection Level UP
+      const levelBefore = calculateLevel(injections).level;
+
+      // 2. Clés débloquées AVANT la nouvelle injection
       const beforeKeys = getUnlockedKeys(injections);
 
-      // 2. Sauvegarde Supabase
+      // 3. Sauvegarde Supabase
       const createdInjection = await addInjectionWithPreviousReaction(
         selectedZone,
         exactIsoString,
@@ -190,21 +197,22 @@ export const AddInjection: React.FC = () => {
         reaction_types: selectedReactions
       };
 
-      // 3. Reconstitution de l'historique mis à jour
       const hasNewEntry = injections.some(i => i.id === newEntry.id);
       const updatedInjections = hasNewEntry ? injections : [newEntry, ...injections];
 
-      const afterKeys = getUnlockedKeys(updatedInjections);
+      // 4. Détection du Level UP
+      const levelAfter = calculateLevel(updatedInjections).level;
+      if (levelAfter > levelBefore) {
+        console.log(`🎉 LEVEL UP ! Passage au Niveau ${levelAfter}`);
+      }
 
-      // 4. Clés obtenues SPÉCIFIQUEMENT sur la nouvelle injection
+      const afterKeys = getUnlockedKeys(updatedInjections);
       const currentSingleKeys = getSingleInjectionKeys(newEntry);
 
-      // 5. Vérification du franchissement de palier de zone
       const zoneInjectionsCount = updatedInjections.filter(i => i.zone === selectedZone).length;
       const ZONE_STEPS = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
       const justHitZoneStep = ZONE_STEPS.includes(zoneInjectionsCount);
 
-      // 6. Combinaison des règles : Nouveaux badges + Répétables + Palier de zone direct
       const newlyUnlockedKeys = Array.from(
         new Set([
           ...afterKeys.filter(k => !beforeKeys.includes(k)),
@@ -252,11 +260,22 @@ export const AddInjection: React.FC = () => {
           <span>Retour</span>
         </button>
 
-        <div>
-          <h1 className="font-serif text-2xl font-bold text-[#5E4B8B]">Nouvelle
-            Injection</h1>
-          <p className="text-xs text-[#8E8294]">Saisie du changement de
-            pompe</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1
+              className="font-serif text-2xl font-bold text-[#5E4B8B]">Nouvelle
+              Injection</h1>
+            <p className="text-xs text-[#8E8294]">Saisie du changement de
+              pompe</p>
+          </div>
+
+          {/* Badge Niveau de l'utilisateur */}
+          <div
+            className="flex items-center gap-1.5 rounded-2xl border border-[#D3C1E5] bg-[#E5D9F2] px-3 py-1.5 text-[#5E4B8B]">
+            <Zap className="h-4 w-4 fill-amber-400 text-amber-500" />
+            <span
+              className="text-xs font-bold">Niv. {currentLevelInfo.level}</span>
+          </div>
         </div>
       </div>
 
@@ -322,7 +341,7 @@ export const AddInjection: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Grille des zones avec statut de réservation */}
+        {/* 3. Grille des zones */}
         <div className="space-y-2.5">
           <label
             className="px-1 text-xs font-bold tracking-wider text-[#8E8294] uppercase">Sélectionner
