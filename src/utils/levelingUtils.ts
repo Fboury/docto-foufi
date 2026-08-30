@@ -7,10 +7,7 @@ export interface LevelInfo {
 }
 
 export const XP_PER_INJECTION = 100;
-export const XP_PER_BADGE = 50; // Bonus d'XP par badge
-
-// DATE DE DÉBUT DE LA GAMIFICATION
-export const GAMIFICATION_START_DATE = new Date('2026-08-30T14:00:00');
+export const XP_PER_BADGE = 50;
 
 const LEVEL_TITLES: Record<number, string> = {
   1: 'Débutante',
@@ -28,10 +25,10 @@ const getXPForLevel = (level: number): number => {
   return Math.floor(100 * Math.pow(level, 1.25)) + 50;
 };
 
-// Helper pour calculer les clés de badges débloqués sur l'historique filtré
-const getUnlockedKeysFromInjections = (items: any[]): string[] => {
+// Helper de détection des clés de badges sur l'historique complet
+export const getUnlockedKeysFromInjections = (items: any[]): string[] => {
   const keys: string[] = [];
-  const total = items.length;
+  const total = items?.length || 0;
 
   if (total === 0) return keys;
 
@@ -84,20 +81,20 @@ const getUnlockedKeysFromInjections = (items: any[]): string[] => {
 };
 
 export const calculateLevel = (totalInjectionsInput: number | any[]): LevelInfo => {
-  let validInjections: any[] = [];
+  let allInjections: any[] = [];
 
   if (Array.isArray(totalInjectionsInput)) {
-    validInjections = totalInjectionsInput.filter(injection => {
-      if (!injection?.injected_at) return false;
-      const injectionDate = new Date(injection.injected_at);
-      return injectionDate >= GAMIFICATION_START_DATE;
-    });
+    allInjections = totalInjectionsInput;
   }
 
-  const injectionXP = validInjections.length * XP_PER_INJECTION;
+  // 1. XP globale des injections (100 XP par injection)
+  const injectionCount = Array.isArray(totalInjectionsInput)
+    ? totalInjectionsInput.length
+    : Number(totalInjectionsInput) || 0;
+  const injectionXP = injectionCount * XP_PER_INJECTION;
 
-  // Calcul du nombre de badges débloqués depuis la date de démarrage
-  const unlockedKeys = getUnlockedKeysFromInjections(validInjections);
+  // 2. XP globale des badges débloqués (50 XP par badge)
+  const unlockedKeys = getUnlockedKeysFromInjections(allInjections);
   const badgeXP = unlockedKeys.length * XP_PER_BADGE;
 
   const totalXP = injectionXP + badgeXP;
