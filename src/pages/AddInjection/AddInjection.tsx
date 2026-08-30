@@ -12,19 +12,19 @@ import {
 } from 'lucide-react';
 import { useInjections } from '../../hooks/useInjections';
 import { usePlannedInjections } from '../../hooks/usePlannedInjections';
-import { calculateLevel } from '../../utils/levelingUtils';
+import { calculateLevel, LevelInfo } from '../../utils/levelingUtils';
 import { InjectionZone, ReactionType } from '../../types/injection';
 import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
 import {
   BadgeUnlockModal
 } from '../../components/BadgeUnlockModal/BadgeUnlockModal';
+import { LevelUpModal } from '../../components/LevelUpModal/LevelUpModal';
 
 // Extraction automatique des clés de badges répétables depuis ALL_BADGES
 const REPEATABLE_BADGE_KEYS = ALL_BADGES.map(b => b.key).filter(
   key => !key.startsWith('total_injections_') && !key.startsWith('zone_master_')
 );
 
-// Helper de détection des clés de badges débloqués sur UNE injection donnée
 export const getSingleInjectionKeys = (entry: any): string[] => {
   if (!entry || !entry.injected_at) return [];
   const keys: string[] = [];
@@ -57,7 +57,6 @@ export const getSingleInjectionKeys = (entry: any): string[] => {
   return keys;
 };
 
-// Helper global pour l'historique complet
 export const getUnlockedKeys = (items: any[]): string[] => {
   const keys: string[] = [];
   const total = items?.length || 0;
@@ -135,9 +134,11 @@ export const AddInjection: React.FC = () => {
   const [selectedReactions, setSelectedReactions] = useState<ReactionType[]>([]);
   const [reactionDetails, setReactionDetails] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [newlyUnlocked, setNewlyUnlocked] = useState<BadgeConfig[]>([]);
 
-  // Calcul sécurisé du niveau
+  // États pour les modales en file d'attente
+  const [newlyUnlockedBadges, setNewlyUnlockedBadges] = useState<BadgeConfig[]>([]);
+  const [newLevelReached, setNewLevelReached] = useState<LevelInfo | null>(null);
+
   const currentLevelInfo = calculateLevel(injections);
 
   useEffect(() => {
@@ -176,10 +177,10 @@ export const AddInjection: React.FC = () => {
     try {
       const exactIsoString = new Date(injectionDate).toISOString();
 
-      // 1. Détection Level UP
-      const levelBefore = calculateLevel(injections).level;
+      // 1. Calcul du niveau AVANT
+      const levelInfoBefore = calculateLevel(injections);
 
-      // 2. Clés débloquées AVANT la nouvelle injection
+      // 2. Clés débloquées AVANT
       const beforeKeys = getUnlockedKeys(injections);
 
       // 3. Sauvegarde Supabase
@@ -200,12 +201,11 @@ export const AddInjection: React.FC = () => {
       const hasNewEntry = injections.some(i => i.id === newEntry.id);
       const updatedInjections = hasNewEntry ? injections : [newEntry, ...injections];
 
-      // 4. Détection du Level UP
-      const levelAfter = calculateLevel(updatedInjections).level;
-      if (levelAfter > levelBefore) {
-        console.log(`🎉 LEVEL UP ! Passage au Niveau ${levelAfter}`);
-      }
+      // 4. Vérification Level UP
+      const levelInfoAfter = calculateLevel(updatedInjections);
+      const hasLeveledUp = levelInfoAfter.level > levelInfoBefore.level;
 
+      // 5. Vérification des Badges
       const afterKeys = getUnlockedKeys(updatedInjections);
       const currentSingleKeys = getSingleInjectionKeys(newEntry);
 
@@ -221,9 +221,17 @@ export const AddInjection: React.FC = () => {
         ])
       );
 
-      if (newlyUnlockedKeys.length > 0) {
-        const badgesToReward = ALL_BADGES.filter(b => newlyUnlockedKeys.includes(b.key));
-        setNewlyUnlocked(badgesToReward);
+      const badgesToReward = ALL_BADGES.filter(b => newlyUnlockedKeys.includes(b.key));
+
+      // 6. Gestion du déclenchement
+      if (hasLeveledUp) {
+        setNewLevelReached(levelInfoAfter);
+        if (badgesToReward.length > 0) {
+          // Stocke les badges pour les afficher APRÈS la fermeture du Level Up
+          setNewlyUnlockedBadges(badgesToReward);
+        }
+      } else if (badgesToReward.length > 0) {
+        setNewlyUnlockedBadges(badgesToReward);
       } else {
         navigate('/');
       }
@@ -233,6 +241,20 @@ export const AddInjection: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Fermeture du Level Up -> Affiche la modale Badge s'il y en a, sinon redirection
+  const handleLevelUpClose = () => {
+    setNewLevelReached(null);
+    if (newlyUnlockedBadges.length === 0) {
+      navigate('/');
+    }
+  };
+
+  // Fermeture des Badges -> Redirection
+  const handleBadgesClose = () => {
+    setNewlyUnlockedBadges([]);
+    navigate('/');
   };
 
   const selectedZoneData = zonesWithStats.find(z => z.id === selectedZone);
@@ -269,7 +291,6 @@ export const AddInjection: React.FC = () => {
               pompe</p>
           </div>
 
-          {/* Badge Niveau de l'utilisateur */}
           <div
             className="flex items-center gap-1.5 rounded-2xl border border-[#D3C1E5] bg-[#E5D9F2] px-3 py-1.5 text-[#5E4B8B]">
             <Zap className="h-4 w-4 fill-amber-400 text-amber-500" />
@@ -282,6 +303,7 @@ export const AddInjection: React.FC = () => {
       <form
         onSubmit={handleSubmit}
         className="space-y-6 pb-10">
+        {/* Formulaire ... */}
         {/* 1. Date & Heure */}
         <div
           className="flex items-center justify-between rounded-3xl border border-[#E8DFD8] bg-white p-4 shadow-sm">
@@ -479,14 +501,19 @@ export const AddInjection: React.FC = () => {
         </button>
       </form>
 
-      {/* Modal de déblocage des badges avec confettis */}
-      <BadgeUnlockModal
-        unlockedBadges={newlyUnlocked}
-        onClose={() => {
-          setNewlyUnlocked([]);
-          navigate('/');
-        }}
+      {/* 1. Modal Level Up (Prioritaire) */}
+      <LevelUpModal
+        levelInfo={newLevelReached}
+        onClose={handleLevelUpClose}
       />
+
+      {/* 2. Modal de déblocage des badges (s'affiche si pas de LevelUp en cours) */}
+      {!newLevelReached && (
+        <BadgeUnlockModal
+          unlockedBadges={newlyUnlockedBadges}
+          onClose={handleBadgesClose}
+        />
+      )}
     </div>
   );
 };

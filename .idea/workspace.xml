@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="fix injection stocks">
-      <change afterPath="$PROJECT_DIR$/src/components/LevelUpModal/LevelUpModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Dashboard/components/LevelCard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/levelingUtils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.html" afterDir="false" />
+    <list default="true" id="fb0e3baf-67c4-4eaf-92cd-6dcf9221cb34" name="Changes" comment="push before modale level up">
       <change beforePath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AddInjection/AddInjection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/Profile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,15 +149,7 @@
       <workItem from="1786990785506" duration="5317000" />
       <workItem from="1787078996709" duration="19470000" />
       <workItem from="1787680460388" duration="6808000" />
-      <workItem from="1787925093283" duration="3285000" />
-    </task>
-    <task id="LOCAL-00035" summary="update ftp">
-      <option name="closed" value="true" />
-      <created>1777267290498</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1777267290498</updated>
+      <workItem from="1787925093283" duration="3327000" />
     </task>
     <task id="LOCAL-00036" summary="fix double tap ?">
       <option name="closed" value="true" />
@@ -550,7 +535,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787926258617</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="push before modale level up">
+      <option name="closed" value="true" />
+      <created>1788109535470</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1788109535470</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,7 +555,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajout et historique" />
     <MESSAGE value="gitigbore" />
     <MESSAGE value="Ajout stats" />
     <MESSAGE value="more improvements" />
@@ -587,7 +579,8 @@
     <MESSAGE value="fix multibadge" />
     <MESSAGE value="fix refill" />
     <MESSAGE value="fix injection stocks" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix injection stocks" />
+    <MESSAGE value="push before modale level up" />
+    <option name="LAST_COMMIT_MESSAGE" value="push before modale level up" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
