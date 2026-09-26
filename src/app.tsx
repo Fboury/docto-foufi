@@ -5,6 +5,7 @@ import { Dashboard } from './pages/Dashboard/Dashboard';
 import { History } from './pages/History/History';
 import { Stats } from './pages/Stats/Stats';
 import { Profile } from './pages/Profile/Profile';
+import { Checklist } from './pages/Checklist/Checklist';
 import { Stocks } from './pages/Stocks/Stocks';
 
 const router = createBrowserRouter([
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: '/stocks',
         element: <Stocks />
+      },
+      {
+        path: '/checklist',
+        element: <Checklist />
       }
     ]
   }
