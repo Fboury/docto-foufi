@@ -18,7 +18,7 @@ import { ALL_BADGES, BadgeConfig } from '../../constants/badges';
 import {
   BadgeUnlockModal
 } from '../../components/BadgeUnlockModal/BadgeUnlockModal';
-import { LevelUpModal } from '../../components/LevelUpModal/LevelUpModal';
+import { LevelUpModal } from '../../components/LevelUpModal/LevelUpModal'; // Extraction automatique des clés de badges répétables depuis ALL_BADGES
 
 // Extraction automatique des clés de badges répétables depuis ALL_BADGES
 const REPEATABLE_BADGE_KEYS = ALL_BADGES.map(b => b.key).filter(
@@ -33,6 +33,7 @@ export const getSingleInjectionKeys = (entry: any): string[] => {
   const month = d.getMonth() + 1;
   const day = d.getDate();
   const hour = d.getHours();
+  const year = d.getFullYear();
   const dayOfWeek = d.getDay();
 
   if (hour >= 6 && hour < 9) keys.push('early_bird');
@@ -53,7 +54,7 @@ export const getSingleInjectionKeys = (entry: any): string[] => {
   if (month === 4 && day === 1) keys.push('pacs_anniversary_injection');
   if (month === 8 && day === 1) keys.push('engagement_anniversary_injection');
   if (month === 8 && day === 19) keys.push('test');
-
+  if (month === 10 && day === 18 && year === 2026) keys.push('first_half_marathon_2026');
   return keys;
 };
 
@@ -121,7 +122,7 @@ export const AddInjection: React.FC = () => {
   const todayPlannedZonesMap = plannedInjections.reduce<Record<string, string>>((acc, p) => {
     const pDate = parsePlannedDate(p.planned_date || (p as any).date);
     if (pDate && pDate.getTime() === todayAtMidnight.getTime()) {
-      acc[p.zone] = p.note || 'Prévue aujourd\'hui';
+      acc[p.zone] = p.note || "Prévue aujourd'hui";
     }
     return acc;
   }, {});
@@ -236,8 +237,8 @@ export const AddInjection: React.FC = () => {
         navigate('/');
       }
     } catch (err) {
-      console.error('Erreur lors de l\'enregistrement :', err);
-      alert('Erreur lors de l\'enregistrement dans la base de données.');
+      console.error("Erreur lors de l'enregistrement :", err);
+      alert("Erreur lors de l'enregistrement dans la base de données.");
     } finally {
       setIsSubmitting(false);
     }
@@ -262,8 +263,7 @@ export const AddInjection: React.FC = () => {
 
   if (loadingInjections || loadingPlanned) {
     return (
-      <div
-        className="flex min-h-[50vh] flex-col items-center justify-center text-[#5E4B8B]">
+      <div className="flex min-h-[50vh] flex-col items-center justify-center text-[#5E4B8B]">
         <Loader2 className="mb-2 h-8 w-8 animate-spin" />
         <p className="text-sm font-medium">Chargement des zones...</p>
       </div>
@@ -284,18 +284,13 @@ export const AddInjection: React.FC = () => {
 
         <div className="flex items-center justify-between">
           <div>
-            <h1
-              className="font-serif text-2xl font-bold text-[#5E4B8B]">Nouvelle
-              Injection</h1>
-            <p className="text-xs text-[#8E8294]">Saisie du changement de
-              pompe</p>
+            <h1 className="font-serif text-2xl font-bold text-[#5E4B8B]">Nouvelle Injection</h1>
+            <p className="text-xs text-[#8E8294]">Saisie du changement de pompe</p>
           </div>
 
-          <div
-            className="flex items-center gap-1.5 rounded-2xl border border-[#D3C1E5] bg-[#E5D9F2] px-3 py-1.5 text-[#5E4B8B]">
+          <div className="flex items-center gap-1.5 rounded-2xl border border-[#D3C1E5] bg-[#E5D9F2] px-3 py-1.5 text-[#5E4B8B]">
             <Zap className="h-4 w-4 fill-amber-400 text-amber-500" />
-            <span
-              className="text-xs font-bold">Niv. {currentLevelInfo.level}</span>
+            <span className="text-xs font-bold">Niv. {currentLevelInfo.level}</span>
           </div>
         </div>
       </div>
@@ -305,11 +300,9 @@ export const AddInjection: React.FC = () => {
         className="space-y-6 pb-10">
         {/* Formulaire ... */}
         {/* 1. Date & Heure */}
-        <div
-          className="flex items-center justify-between rounded-3xl border border-[#E8DFD8] bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between rounded-3xl border border-[#E8DFD8] bg-white p-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <div
-              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F5EFE6] text-[#5E4B8B]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F5EFE6] text-[#5E4B8B]">
               <Calendar className="h-5 w-5" />
             </div>
             <div>
@@ -326,16 +319,13 @@ export const AddInjection: React.FC = () => {
         </div>
 
         {/* 2. Banner de recommandation */}
-        <div
-          className="space-y-3 rounded-3xl border border-[#D3C1E5] bg-[#E5D9F2] p-4.5 shadow-sm">
+        <div className="space-y-3 rounded-3xl border border-[#D3C1E5] bg-[#E5D9F2] p-4.5 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-[#5E4B8B]" />
-              <span
-                className="text-xs font-bold tracking-wider text-[#5E4B8B] uppercase">Zone recommandée</span>
+              <span className="text-xs font-bold tracking-wider text-[#5E4B8B] uppercase">Zone recommandée</span>
             </div>
-            <span
-              className="rounded-full bg-white/60 px-2 py-0.5 text-[10px] font-bold text-[#5E4B8B]">
+            <span className="rounded-full bg-white/60 px-2 py-0.5 text-[10px] font-bold text-[#5E4B8B]">
               Plus ancienne dispo
             </span>
           </div>
@@ -365,9 +355,7 @@ export const AddInjection: React.FC = () => {
 
         {/* 3. Grille des zones */}
         <div className="space-y-2.5">
-          <label
-            className="px-1 text-xs font-bold tracking-wider text-[#8E8294] uppercase">Sélectionner
-            la zone</label>
+          <label className="px-1 text-xs font-bold tracking-wider text-[#8E8294] uppercase">Sélectionner la zone</label>
 
           <div className="grid grid-cols-3 gap-2.5">
             {zonesWithStats.map(zone => {
@@ -399,28 +387,25 @@ export const AddInjection: React.FC = () => {
                   onClick={() => !isFutureReserved && setSelectedZone(zone.id)}
                   className={`relative flex h-24 flex-col items-center justify-center rounded-2xl p-2 text-center transition-all ${cardStyles}`}>
                   {isFutureReserved && (
-                    <span
-                      className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-200/90 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-900">
+                    <span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-200/90 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-900">
                       <Lock className="h-2.5 w-2.5" /> Bloquée
                     </span>
                   )}
 
                   {isTodayPlanned && !isSelected && (
-                    <span
-                      className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-400 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-950 uppercase shadow-xs">
+                    <span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-amber-400 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-950 uppercase shadow-xs">
                       <Sparkles className="h-2.5 w-2.5" /> Jour J
                     </span>
                   )}
 
                   <span className="mb-0.5 text-xl">{zone.emoji}</span>
-                  <span
-                    className="text-xs leading-tight font-semibold">{zone.shortLabel}</span>
+                  <span className="text-xs leading-tight font-semibold">{zone.shortLabel}</span>
 
                   <span className="mt-0.5 text-[10px] font-medium opacity-85">
                     {isFutureReserved
                       ? reservation?.note || 'Réservée'
                       : isTodayPlanned
-                        ? 'Prévue aujourd\'hui'
+                        ? "Prévue aujourd'hui"
                         : zone.daysAgo === null
                           ? 'Jamais'
                           : `il y a ${zone.daysAgo} j`}
@@ -432,13 +417,10 @@ export const AddInjection: React.FC = () => {
         </div>
 
         {/* 4. Réactions */}
-        <div
-          className="space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-4.5 shadow-sm">
+        <div className="space-y-3 rounded-3xl border border-[#E8DFD8] bg-white p-4.5 shadow-sm">
           <div>
-            <h3 className="text-sm font-bold text-[#2D283E]">Injection
-              précédente</h3>
-            <p className="text-xs text-[#8E8294]">Avez-vous observé une réaction
-              sur le dernier site ?</p>
+            <h3 className="text-sm font-bold text-[#2D283E]">Injection précédente</h3>
+            <p className="text-xs text-[#8E8294]">Avez-vous observé une réaction sur le dernier site ?</p>
           </div>
 
           <div className="grid grid-cols-3 gap-2">

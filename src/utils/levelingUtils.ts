@@ -55,6 +55,7 @@ export const getUnlockedKeysFromInjections = (items: any[]): string[] => {
     const month = d.getMonth() + 1;
     const day = d.getDate();
     const hour = d.getHours();
+    const year = d.getFullYear();
     const dayOfWeek = d.getDay();
 
     if (hour >= 6 && hour < 9) keys.push('early_bird');
@@ -74,6 +75,7 @@ export const getUnlockedKeysFromInjections = (items: any[]): string[] => {
     if (month === 12 && day === 1) keys.push('couple_anniversary_injection');
     if (month === 4 && day === 1) keys.push('pacs_anniversary_injection');
     if (month === 8 && day === 1) keys.push('engagement_anniversary_injection');
+    if (month === 10 && day === 18 && year === 2026) keys.push('first_half_marathon_2026');
     if (month === 8 && day === 19) keys.push('test');
   });
 

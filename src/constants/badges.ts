@@ -304,5 +304,12 @@ export const ALL_BADGES: BadgeConfig[] = [
     title: 'Bonne Année !',
     description: 'Injection le 1er jour de l’année',
     emoji: '🎆'
+  },
+  // autre
+  {
+    key: 'first_half_marathon_2026',
+    title: 'Semi-Marathonienne ! 🏅',
+    description: 'Félicitations pour ton tout premier semi-marathon !',
+    emoji: '🏃‍♀️'
   }
 ];
